@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const environmentConfig = require('../config/environment-config');
 
 const sequelize = new Sequelize(
-    environmentConfig.dbName,
+    'pdf_generate',
     environmentConfig.dbUser,
     environmentConfig.dbPassword,
     {
