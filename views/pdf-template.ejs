@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Muli", "Helvetica Neue", "Arial", "sans-serif";
+        font-size: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        word-break: break-word;
+      }
+
+      th:first-child,
+      td:first-child {
+        min-width: 200px;
+      }
+
+      th:not(:first-child),
+      td:not(:first-child) {
+        width: 80px;
+      }
+
+      thead {
+        background-color: #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <% pages.forEach((pageData, index) => { %>
+    <div>
+      <div style="font-size: large; font-weight: bold">
+        My PDF Header (Page <%= index + 1 %>)
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>PRODUCT</th>
+            <th>QTY+BONUS</th>
+            <th>UNIT PRICE</th>
+            <th>PRICE</th>
+            <th>VAT</th>
+            <th>DISCOUNT</th>
+            <th>AMOUNT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% pageData.forEach((item, i) => { %>
+          <tr>
+            <td><%= item.product %></td>
+            <td><%= item.quantity %></td>
+            <td><%= item.unitPrice %></td>
+            <td><%= item.price %></td>
+            <td><%= item.vat %></td>
+            <td><%= item.discount %></td>
+            <td><%= item.amount %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <div
+        style="font-size: large; font-weight: bold; page-break-after: always"
+      >
+        This is a common footer
+      </div>
+    </div>
+    <% }) %>
+  </body>
+</html>
