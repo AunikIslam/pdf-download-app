@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require('cors');
+const path = require("path");
 
 const environmentConfig = require('./config/environment-config');
 const pharmaInvoiceRouters = require('./routes/pharma-invoice');
@@ -10,6 +11,7 @@ const axios = require("axios");
 const app = express();
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors())
 
 const accessTokenValidator = async (req, res, next) => {
