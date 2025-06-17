@@ -15,7 +15,7 @@
               <node kind="schema" qname="@" />
             </node>
             <node kind="database" qname="fmcg2db">
-              <node kind="schema" qname="pdf_generate" />
+              <node kind="schema" qname="pdf_generation" />
             </node>
           </node>
         </introspection-scope>
