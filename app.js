@@ -9,6 +9,7 @@ const baseUrls = require('./config/base-urls');
 const utilFunctions = require('./utils/util-functions')
 const axios = require("axios");
 const app = express();
+const templateRoutes = require('./routes/template-routes');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -28,7 +29,9 @@ const accessTokenValidator = async (req, res, next) => {
     }
 }
 
-app.use('/pharma-invoice', accessTokenValidator, pharmaInvoiceRouters);
+// app.use('/pharma-invoice', accessTokenValidator, pharmaInvoiceRouters);
+
+app.use(accessTokenValidator, templateRoutes);
 
 app.listen(environmentConfig.port, () => {
     console.log(`Server is running on port ${environmentConfig.port}`);

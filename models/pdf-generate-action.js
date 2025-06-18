@@ -1,11 +1,12 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../utils/database-connection');
 
-const PdfGenerateAction = sequelize.define('pdfGenerateAction', {
+const PdfGenerateAction = sequelize.define('pdf_generation_action', {
     id: {
         type: Sequelize.BIGINT,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        allowNull: false,
     },
     action: {
         type: Sequelize.STRING,
@@ -19,6 +20,8 @@ const PdfGenerateAction = sequelize.define('pdfGenerateAction', {
         type: Sequelize.STRING,
         allowNull: false
     },
+}, {
+    schema: 'pdf_generation'
 });
 
 module.exports = PdfGenerateAction;

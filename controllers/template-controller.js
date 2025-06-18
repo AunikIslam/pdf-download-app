@@ -8,7 +8,11 @@ const fs = require('fs').promises;
 exports.getTemplates = async (req, res) => {
     try {
         const action = req.query.action;
-        const organizationId = req.query.organizationId
+        const organizationId = req.query.organizationId;
+
+        if (!action || !organizationId) {
+            res.status(400);
+        }
         const dirPath = path.join(rootDir, 'templates', action);
 
         const [templateFile, files] = await Promise.all([
@@ -20,8 +24,11 @@ exports.getTemplates = async (req, res) => {
             }),
             fs.readdir(dirPath)
         ])
-    } catch (error) {
 
+        console.log(templateFile);
+        console.log(files);
+    } catch (error) {
+        console.log(error);
     }
 
 }

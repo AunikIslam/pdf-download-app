@@ -6,10 +6,24 @@ module.exports = {
     await queryInterface.createTable(
         {schema: 'pdf_generation', tableName: 'pdf_generation_actions'},
         {
-          id: {type: Sequelize.BIGINT, primaryKey: true, autoIncrement: true},
-          action: {type: Sequelize.STRING, allowNull: false},
-          organization_id: {type: Sequelize.BIGINT, allowNull: false},
-          template_name: {type: Sequelize.STRING, allowNull: false},
+          id: {
+              type: Sequelize.BIGINT,
+              primaryKey: true,
+              autoIncrement: true,
+              allowNull: false,
+          },
+          action: {
+              type: Sequelize.STRING,
+              allowNull: false
+          },
+          organization_id: {
+              type: Sequelize.BIGINT,
+              allowNull: false
+          },
+          template_name: {
+              type: Sequelize.STRING,
+              allowNull: false
+          },
           createdAt: Sequelize.DATE,
           updatedAt: Sequelize.DATE
         }
