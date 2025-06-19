@@ -21,7 +21,9 @@ const PdfGenerateAction = sequelize.define('pdf_generation_action', {
         allowNull: false
     },
 }, {
-    schema: 'pdf_generation'
+    tableName: 'pdf_generation_actions',
+    schema: 'pdf_generation',
+    timestamps: true,
 });
 
 module.exports = PdfGenerateAction;
