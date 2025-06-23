@@ -70,3 +70,7 @@ exports.getTemplates = async (req, res) => {
     }
 
 }
+
+exports.setTemplates = async (req, res) => {
+
+}

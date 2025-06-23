@@ -10,29 +10,27 @@ const utilFunctions = require('./utils/util-functions')
 const axios = require("axios");
 const app = express();
 const templateRoutes = require('./routes/template-routes');
-const pipes = require('./helpers/pipes');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors())
+app.use(cors());
 
-const accessTokenValidator = async (req, res, next) => {
+app.use('/', async (req, res, next) => {
     try {
-        await axios.get(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth), {
+        const data = await axios.get(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth), {
             headers: {
                 Authorization: req.headers['authorization']
             }
         });
+        console.log(data);
         next();
     }
     catch (error) {
         res.status(401);
     }
-}
+});
 
-// app.use('/pharma-invoice', accessTokenValidator, pharmaInvoiceRouters);
-
-app.use(accessTokenValidator, templateRoutes);
+app.use('/api/v1/pdf-generation', templateRoutes);
 
 app.listen(environmentConfig.port, () => {
     console.log(`Server is running on port ${environmentConfig.port}`);
