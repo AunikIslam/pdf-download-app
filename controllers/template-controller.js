@@ -6,6 +6,8 @@ const pdfGenerateAction = require('../models/pdf-generate-action');
 const fs = require('fs').promises;
 const TemplateListResponse = require('../models/template-list-response');
 const ApiResponse = require('../models/api-response');
+const dummyDataSet = require('../utils/dummy-data-set');
+const pipes = require('../helpers/pipes')
 
 exports.getTemplates = async (req, res) => {
     try {
@@ -31,7 +33,11 @@ exports.getTemplates = async (req, res) => {
         const files = await Promise.all(
             fileNames.map(async (name) => {
                 const fullPath = path.join(dirPath, name);
-                const content = await fs.readFile(fullPath, 'utf8');
+                const content = await ejs.renderFile(fullPath, {
+                    order: dummyDataSet.secondaryOrderDummyData,
+                    pipes: pipes,
+                    showPercentage: false
+                });
                 return {
                     isSelected: false,
                     fileName: name,

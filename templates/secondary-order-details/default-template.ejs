@@ -1,0 +1,258 @@
+<div class="order-template-container">
+    <div class="order-header-section">
+        <img class="template-org-logo" src="../src/assets/images/logos/template-org-logo.png">
+        <div class="template-mid-section">
+            <div class="template-mid-section-child">
+                <div>Distributor:</div>
+                <div><%= order.Distributor.Name %></div>
+                <div>Code: <%= order.Distributor.Code %></div>
+                <div data-type="address"><%= order.Distributor.Address %></div>
+                <div data-type="mobile"><%= order.Distributor.Mobile %></div>
+                <div data-type="phone"><%= order.Distributor.Phone %></div>
+            </div>
+
+            <div class="template-mid-section-child">
+                <div>Retailer:</div>
+                <div><%= order.Customer.CustomerName %></div>
+                <div>Code: <%= order.Customer.CustomerCode %></div>
+                <div data-type="address"><%= order.Customer.Address %></div>
+                <div data-type="mobile"><%= order.Customer.Mobile %></div>
+            </div>
+        </div>
+        <table class="template-info-section">
+            <tr>
+                <td>Order</td>
+                <td>#<%= order.Id %></td>
+            </tr>
+            <tr>
+                <td>Payment Type</td>
+                <td><%= order.PaymentType %></td>
+            </tr>
+            <tr>
+                <td>Order Time</td>
+                <td><%= pipes.datePipe(order.CreatedAt, 'dd-MMM-yy h:mm a') %></td>
+            </tr>
+            <tr>
+                <td>Market</td>
+                <td><%= order.Market.MarketName %></td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td><%= pipes.approvalPipe(order.IsApproved) %></td>
+            </tr>
+            <tr>
+                <td>User</td>
+                <td><%= order.CreatedBy.UserName %></td>
+            </tr>
+        </table>
+    </div>
+
+    <table class="template-table-with-footer" cellspacing="0">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Product</th>
+            <th class="text-right">Price</th>
+            <th class="text-right">Discount On Price</th>
+            <th class="text-right">Discounted Price</th>
+            <th class="text-right">Volume</th>
+            <th class="text-right">Unit</th>
+            <th class="text-right">Pack</th>
+            <th class="text-right">Sub-Total</th>
+            <th class="text-right">VAT</th>
+            <th class="text-right">Discount</th>
+            <th class="text-right">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (let i = 0; i < order.SecondaryOrderDetailList.length; i++) {
+            let orderDetail = order.SecondaryOrderDetailList[i];
+        %>
+        <tr>
+            <td><%= i + 1 %></td>
+            <td>
+                <%= orderDetail.Product.Name %><b>(<%= orderDetail.Product.Code %>)</b>
+            </td>
+            <td class="text-right">
+                <%= orderDetail.Price %>
+            </td>
+            <td class="text-right">
+                <%= orderDetail.DiscountAmount %>
+                <% if (showPercentage) { %>
+                    <%= orderDetail.Discount %>%
+                <% } %>
+            </td>
+            <td class="text-right">
+                <%= orderDetail.DiscountedPrice %>
+            </td>
+            <td class="text-right">
+                <%= orderDetail.Volume %> <%= orderDetail.Product.MeasurementUnit %>
+            </td>
+            <td class="text-right">
+                <%= orderDetail.Unit %> <%= orderDetail.Product.MeasurementUnitForUnit %>
+            </td>
+            <td class="text-right">
+                <%= orderDetail.Pack %> <%= orderDetail.Product.MeasurementUnitForPack %>
+            </td>
+            <td class="text-right">
+                <%= orderDetail.SubTotal %>
+            </td>
+            <td class="text-right">
+                <%= orderDetail.Vat %>
+            </td>
+            <td class="text-right">
+                <%= orderDetail.DiscountTotal %>
+                <% if (showPercentage) { %>
+                    <%= orderDetail.Discount %>%
+                <% } %>
+            </td>
+            <td class="text-right">
+                <%= orderDetail.TotalAmount %>
+            </td>
+        </tr>
+        <% } %>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th></th>
+            <th></th>
+            <th class="text-right"></th>
+            <th class="text-right"></th>
+            <th class="text-right"></th>
+            <th class="text-right">
+                <%= order.Volume %>
+            </th>
+            <th class="text-right">
+                <%= order.Unit %>
+            </th>
+            <th class="text-right">
+                <%= order.Pack %>
+            </th>
+            <th class="text-right">
+                <%= order.SubTotal %>
+            </th>
+            <th class="text-right">
+                <%= order.VatTotal %>
+            </th>
+            <th class="text-right">
+                <%= order.DiscountTotal %>
+            </th>
+            <th class="text-right">
+                <%= order.OrderTotal %>
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+
+    <% if (order.ItemOfferList || order.OrderOfferList) { %>
+        <table class="template-table" cellspacing="0">
+            <thead>
+            <tr>
+                <th class="text-center">Campaign</th>
+                <th class="text-center">Product</th>
+                <th class="text-center">Discount(%)</th>
+                <th class="text-center">Quantity</th>
+                <th class="text-center">Discount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% if (order.ItemOfferList) { %>
+                <% for (let itemOffer of order.ItemOfferList) { %>
+                    <% if (itemOffer.Offer.OfferType === 'PRODUCT_QUANTITY_OFFER') { %>
+                        <tr>
+                            <td><%= itemOffer.Campaign.Name %></td>
+                            <td><%= itemOffer.Product.Name %><b>(<%= itemOffer.Product.Code %>)</b></td>
+                            <td class="text-center">
+                                <%= itemOffer.Offer.IsPercentage ? itemOffer.Offer.Amount : 'N/A' %>
+                            </td>
+                            <td class="text-center">
+                                <%= itemOffer.Quantity %>
+                            </td>
+                            <td class="text-center">N/A</td>
+                        </tr>
+                    <% } %>
+                    <% if (
+                            itemOffer.Offer.OfferType === 'AMOUNT_DISCOUNT_ON_PRODUCT_ORDER_AMOUNT'
+                            || itemOffer.Offer.OfferType === 'AMOUNT_DISCOUNT_ON_PRODUCT_UNIT_PRICE'
+                            || itemOffer.Offer.OfferType === 'PRODUCT_PERCENTAGE_DISCOUNT_OFFER'
+                            || itemOffer.Offer.OfferType === 'PRODUCT_TYPE_PERCENTAGE_DISCOUNT_OFFER'
+                            || itemOffer.Offer.OfferType === 'PRODUCT_TYPE_AMOUNT_DISCOUNT_OFFER'
+                    ) { %>
+                        <tr>
+                            <td><%= itemOffer.Campaign.Name %></td>
+                            <td><%= itemOffer.Product.Name %><b>(<%= itemOffer.Product.Code %>)</b></td>
+                            <td class="text-center">
+                                <%= itemOffer.Offer.IsPercentage ? itemOffer.Offer.Amount : 'N/A' %>
+                            </td>
+                            <td class="text-center">N/A</td>
+                            <td class="text-right">
+                                <%= itemOffer.Discount %>
+                            </td>
+                        </tr>
+                    <% } %>
+                <% } %>
+            <% } %>
+
+            <% if (order.OrderOfferList) { %>
+                <% for (let orderOffer of order.OrderOfferList) { %>
+                    <% if (orderOffer.Offer.OfferType === 'DISCOUNT_AMOUNT_ON_TOTAL_ORDER_AMOUNT') { %>
+                        <tr>
+                            <td><%= orderOffer.Campaign.Name %></td>
+                            <td class="text-center">N/A</td>
+                            <td class="text-center">N/A</td>
+                            <td class="text-center">N/A</td>
+                            <td class="text-center"><%= orderOffer.Discount %></td>
+                        </tr>
+                    <% } %>
+                    <% if (orderOffer.Offer.OfferType === 'PERCENTAGE_DISCOUNT_ON_TOTAL_ORDER_AMOUNT') { %>
+                        <tr>
+                            <td><%= orderOffer.Campaign.Name %></td>
+                            <td class="text-center">N/A</td>
+                            <td class="text-center"><%= orderOffer.Offer.Amount %></td>
+                            <td class="text-center">N/A</td>
+                            <td class="text-right">
+                                <%= orderOffer.Discount %>
+                            </td>
+                        </tr>
+                    <% } %>
+                <% } %>
+            <% } %>
+            </tbody>
+        </table>
+    <% } %>
+
+    <table class="secondary-order-details-summary">
+        <tr>
+            <th class="text-right">Discount From Campaign</th>
+            <th class="text-right"><%= order.ItemizedDiscount %></th>
+        </tr>
+
+        <tr>
+            <th class="text-right">Total</th>
+            <th class="text-right"><%= order.TotalAfterItemizedCampaign %></th>
+        </tr>
+
+        <tr>
+            <th class="text-right">Gross Total</th>
+            <th class="text-right"><%= order.GrossTotal %></th>
+        </tr>
+
+        <tr>
+            <th class="text-right">Additional Discount (<%= order.AdditionalDiscount %>)</th>
+            <th class="text-right"><%= order.TotalAdditionalDiscount %></th>
+        </tr>
+
+        <tr>
+            <th class="text-right">Adjustment</th>
+            <th class="text-right"><%= order.Adjustment %></th>
+        </tr>
+
+        <tr>
+            <th class="text-right">Net Payable</th>
+            <th class="text-right"><%= order.TotalAmount %></th>
+        </tr>
+
+    </table>
+
+    <div class="template-order-remarks"><b>Comment:</b> This is default format.</div>
+</div>

@@ -10,6 +10,7 @@ const utilFunctions = require('./utils/util-functions')
 const axios = require("axios");
 const app = express();
 const templateRoutes = require('./routes/template-routes');
+const pipes = require('./helpers/pipes');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
