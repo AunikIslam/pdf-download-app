@@ -18,3 +18,10 @@ exports.approvalPipe = (value) => {
     }
     return 'Pending';
 }
+
+exports.currencyPipe = (value) => {
+    return value.toLocaleString('en-IN', {
+       minimumFractionDigits: 0,
+       maximumFractionDigits: 2
+    });
+}

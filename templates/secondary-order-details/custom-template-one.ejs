@@ -6,17 +6,17 @@
                 <div>Distributor:</div>
                 <div><%= order.Distributor.Name %></div>
                 <div>Code: <%= order.Distributor.Code %></div>
-                <div data-type="address"><%= order.Distributor.Address %></div>
-                <div data-type="mobile"><%= order.Distributor.Mobile %></div>
-                <div data-type="phone"><%= order.Distributor.Phone %></div>
+                <div><%= order.Distributor.Address %></div>
+                <div><%= order.Distributor.Mobile %></div>
+                <div><%= order.Distributor.Phone %></div>
             </div>
 
             <div class="template-mid-section-child">
                 <div>Retailer:</div>
                 <div><%= order.Customer.CustomerName %></div>
                 <div>Code: <%= order.Customer.CustomerCode %></div>
-                <div data-type="address"><%= order.Customer.Address %></div>
-                <div data-type="mobile"><%= order.Customer.Mobile %></div>
+                <div><%= order.Customer.Address %></div>
+                <div><%= order.Customer.Mobile %></div>
             </div>
         </div>
         <table class="template-info-section">
@@ -67,13 +67,13 @@
                 <%= orderDetail.Product.Name %><b>(<%= orderDetail.Product.Code %>)</b>
             </td>
             <td class="text-right">
-                <%= orderDetail.Price %>
+                <%= pipes.currencyPipe(orderDetail.Price) %>
             </td>
             <td class="text-right">
                 <%= orderDetail.Unit %> <%= orderDetail.Product.MeasurementUnitForUnit %>
             </td>
             <td class="text-right">
-                <%= orderDetail.TotalAmount %>
+                <%= pipes.currencyPipe(orderDetail.TotalAmount) %>
             </td>
         </tr>
         <% } %>
@@ -85,7 +85,7 @@
             <th class="text-right"></th>
             <th class="text-right"><%= order.Unit %></th>
             <th class="text-right">
-                <%= order.OrderTotal %>
+                <%= pipes.currencyPipe(order.OrderTotal) %>
             </th>
         </tr>
         </tfoot>
@@ -171,12 +171,12 @@
     <table class="secondary-order-details-summary">
         <tr>
             <th class="text-right">Discount</th>
-            <th class="text-right"><%= order.DiscountTotal %></th>
+            <th class="text-right"><%= pipes.currencyPipe(order.DiscountTotal) %></th>
         </tr>
 
         <tr>
             <th class="text-right">Net Payable</th>
-            <th class="text-right"><%= order.TotalAmount %></th>
+            <th class="text-right"><%= pipes.currencyPipe(order.TotalAmount) %></th>
         </tr>
 
     </table>
