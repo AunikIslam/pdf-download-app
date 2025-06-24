@@ -1,18 +1,30 @@
-class ApiResponse {
+const pipes = require('../helpers/pipes');
+exports.Success = class Success {
     constructor(content = null, page = {}, statusCode = 200, statusMessage = 'Successful') {
-        this.data = {
-            content,
-            page: {
-                size: page.size || 0,
-                number: page.number || 0,
-                totalElements: page.totalElements || 0,
-                totalPages: page.totalPages || 0
+        if (typeof content === 'string') {
+            this.data = {
+                id: content
             }
-        };
+        } else {
+            this.data = {
+                content,
+            };
+        }
+        this.page = page;
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
-        this.timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19);
+        this.timestamp = pipes.datePipe(new Date(), 'yyyy-MM-dd hh:mm:ss');
     }
-}
+};
 
-module.exports = ApiResponse;
+exports.Error = class Error {
+    constructor(errors = ['Contact Support'], statusCode = 500) {
+        if (errors.length > 1) {
+            this.errors = errors;
+        } else {
+            this.error = errors[0];
+        }
+        this.statusCode = statusCode;
+        this.timestamp = pipes.datePipe(new Date(), 'yyyy-MM-dd hh:mm:ss');
+    }
+};

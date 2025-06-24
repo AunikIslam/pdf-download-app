@@ -22,7 +22,7 @@ app.use('/', async (req, res, next) => {
                 Authorization: req.headers['authorization']
             }
         });
-        console.log(data);
+        // console.log(data);
         next();
     }
     catch (error) {

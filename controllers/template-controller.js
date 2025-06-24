@@ -7,7 +7,9 @@ const fs = require('fs').promises;
 const TemplateListResponse = require('../models/template-list-response');
 const ApiResponse = require('../models/api-response');
 const dummyDataSet = require('../utils/dummy-data-set');
-const pipes = require('../helpers/pipes')
+const pipes = require('../helpers/pipes');
+const PdfGenerateAction = require('../models/pdf-generate-action');
+const TemplateAddRequest = require('../models/template-add-request');
 
 exports.getTemplates = async (req, res) => {
     try {
@@ -61,16 +63,54 @@ exports.getTemplates = async (req, res) => {
             totalElements: files.length,
             totalPages: Math.ceil(files.length / 20)
         };
-        const apiResponse = new ApiResponse(listResponse, pageInfo);
+        const apiResponse = new ApiResponse.Success(listResponse, pageInfo);
         res.status(200).json(apiResponse);
-
-
     } catch (error) {
         console.log(error.message);
     }
-
 }
 
-exports.setTemplates = async (req, res) => {
+exports.addTemplate = async (req, res) => {
+    const errorMessages = [];
+
+    if (req.body.organizationId == null) {
+        errorMessages.push('Organization id is required');
+    }
+    if (req.body.action == null) {
+        errorMessages.push('Action is required');
+    }
+    if (req.body.templateName == null) {
+        errorMessages.push('Template is required');
+    }
+    if (errorMessages.length > 0) {
+        return res.status(400).json(new ApiResponse.Error(errorMessages, 400));
+    }
+    const template = await PdfGenerateAction.create(new TemplateAddRequest(req));
+    const apiResponse = new ApiResponse.Success(template.id);
+    return res.status(200).json(apiResponse);
+}
+
+exports.editTemplate = async (req, res) => {
+    const id = req.params.id;
+    const body = req.body;
+    const errorMessages = [];
+    if (id == null) {
+        errorMessages.push('Template id is required.');
+    }
+    if (errorMessages.length > 0) {
+        const apiResponse = new ApiResponse.Error(errorMessages, 400);
+        return res.status(400).json(apiResponse);
+    }
+    try {
+        await PdfGenerateAction.update(body, {
+            where: {
+                id: id
+            }
+        });
+        const apiResponse = new ApiResponse.Success(req.params.id);
+        return res.status(200).json(apiResponse);
+    } catch (error) {
+
+    }
 
 }
