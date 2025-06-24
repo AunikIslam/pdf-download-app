@@ -16,9 +16,6 @@ exports.getTemplates = async (req, res) => {
         const action = req.query.action;
         const organizationId = req.query.organizationId;
 
-        const permissions = req.permissions;
-        console.log(permissions.filter(permission => permission.name === 'ORDER')[0].authorities)
-
         if (!action || !organizationId) {
             res.status(400);
         }
@@ -46,7 +43,7 @@ exports.getTemplates = async (req, res) => {
                 return {
                     isSelected: false,
                     fileName: name,
-                    fileContent: content.trim(),
+                    fileContent: content,
                 }
             })
         );
