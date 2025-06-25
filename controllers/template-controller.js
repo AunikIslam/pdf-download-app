@@ -66,7 +66,7 @@ exports.getTemplates = async (req, res) => {
         const apiResponse = new ApiResponse.Success(listResponse, pageInfo);
         res.status(200).json(apiResponse);
     } catch (error) {
-        console.log(error.message);
+        console.log(`Error from template list api${error.message}`);
     }
 }
 

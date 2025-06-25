@@ -9,23 +9,18 @@ const utilFunctions = require('./utils/util-functions')
 const axios = require("axios");
 const app = express();
 const templateRoutes = require('./routes/template-routes');
+const pdfExportRoutes = require('./routes/pdf-export-routes')
 const BaseService = require('./services/base-service');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-const baseService = new BaseService();
-
 app.use('/', async (req, res, next) => {
     try {
-        const data = await axios.get(utilFunctions.prepareApiUrl(endpoints.validate_token,
-            baseUrls.f_auth), {
-            headers: {
-                Authorization: req.headers['authorization']
-            }
-        });
-        baseService.setToken(req.headers['authorization'])
+        const token = req.headers.authorization;
+        BaseService.setToken(token)
+        req.self = await BaseService.getSelfInfo(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth))
         next();
     } catch (error) {
         res.status(401);
@@ -34,14 +29,15 @@ app.use('/', async (req, res, next) => {
 
 app.use('/', async (req, res, next) => {
     try {
-        req.permissions = await baseService.getPermissionSet(utilFunctions.prepareApiUrl(endpoints.self_authorities, baseUrls.f_base));
+        req.permissions = await BaseService.getPermissionSet(utilFunctions.prepareApiUrl(endpoints.self_authorities, baseUrls.f_base));
         next();
     } catch (error) {
-        console.log(error.message);
+        console.log(`Error from permission set api: ${error.message}`);
     }
 });
 
 app.use('/api/v1/pdf-generation', templateRoutes);
+app.use('/api/v1/pdf-export', pdfExportRoutes)
 
 app.listen(environmentConfig.port, () => {
     console.log(`Server is running on port ${environmentConfig.port}`);

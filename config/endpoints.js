@@ -6,6 +6,12 @@ const endpoints = {
     self_authorities: 'api/user/self/authorities',
 
     /** Authentication ends **/
+
+    /** Secondary Order Starts **/
+
+    secondary_order_details: 'secondaryOrder'
+
+    /** Secondary Order Ends **/
 }
 
 module.exports = endpoints
