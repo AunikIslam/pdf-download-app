@@ -38,7 +38,8 @@ exports.getTemplates = async (req, res) => {
                 const content = await ejs.renderFile(fullPath, {
                     order: dummyDataSet.secondaryOrderDummyData,
                     pipes: pipes,
-                    isSfa: true
+                    isSfa: true,
+                    styles: ''
                 });
                 return {
                     isSelected: false,

@@ -1,0 +1,101 @@
+@page {
+    margin: 0 50px 50px 50px;
+
+    @top-center {
+        content: element(page-header);
+    }
+}
+
+body {
+    font-family: Muli, Arial, Helvetica, sans-serif;
+    font-size: 0.8rem;
+}
+
+/*.invoice-container {*/
+/*    padding: 0;*/
+/*    page-break-after: always;*/
+/*}*/
+
+.invoice-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid black;
+}
+
+.organization-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0;
+}
+
+.invoice-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 1rem;
+}
+
+.user-info-container {
+    display: flex;
+    flex-direction: row;
+    flex: 1 0 0;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.distributor-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.title-table {
+    margin: 1rem auto;
+}
+
+.product-table {
+    width: 100%;
+    margin-bottom: 5px;
+
+    thead th {
+        border-bottom: 1px solid black;
+    }
+
+    tbody tr {
+        td {
+            padding: 0.2rem 0;
+        }
+    }
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+    padding-right: 0;
+    margin-right: 0;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.summary-table {
+    margin-left: auto;
+}
+
+.invoice-container {
+    position: running(header);
+}
+
+
