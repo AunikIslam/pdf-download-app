@@ -6,63 +6,6 @@
     <link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700" rel="stylesheet">
     <style>
         <%= styles %>
-        @page {
-            size: A4;
-            margin: 4cm 1cm 2cm 1cm;
-
-            @top-left {
-                content: element(pageHeader);
-            }
-
-            /*@top-center {*/
-            /*    content: element(pageTitle);*/
-            /*}*/
-
-            /*@top-right {*/
-            /*    content: element(userInfo);*/
-            /*}*/
-        }
-
-        .page-header {
-            position: running(pageHeader);
-            width: 195mm;
-        }
-
-        .page-title {
-            position: running(pageTitle);
-            width: 100%;
-            text-align: center;
-        }
-
-        .page-user-info {
-            position: running(userInfo);
-            width: 100%;
-            text-align: right;
-        }
-
-        /* Make sure content starts below the running headers */
-        .product-table {
-            margin-top: 120px; /* Adjust based on your header height */
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            page-break-inside: auto;
-        }
-
-        tr {
-            page-break-inside: avoid;
-            page-break-after: auto;
-        }
-
-        thead {
-            display: table-header-group;
-        }
-
-        tfoot {
-            display: table-footer-group;
-        }
     </style>
 </head>
 <body>
@@ -76,40 +19,38 @@
                 <div>Phone: +8802-9886701 | Web: www.rtmbd.com</div>
             </div>
         </div>
+        <div class="page-title">
+            <div class="invoice-title">
+                Order Summary
+            </div>
+        </div>
+        <div class="page-user-info">
+            <div class="user-info-container">
+                <div class="user-info">
+                    <div>Date: 2025-06-25</div>
+                    <div>Md. Hasib (Md. Hasib)</div>
+                    <div>Route: Kazipara 2</div>
+                </div>
+                <div class="distributor-info">
+                    <div>ARABI TRADE CENTER</div>
+                    <div>Dhaka</div>
+                </div>
+            </div>
+        </div>
+        <table class="product-table" cellspacing="0">
+            <thead>
+            <tr>
+                <th class="text-left">Product</th>
+                <th class="text-right">Qty(pcs)</th>
+                <th class="text-right">Bonus(pcs)</th>
+                <th class="text-right">Total Qty(pcs)</th>
+                <th class="text-right">Total Qty(ctn)</th>
+                <th class="text-right">Amount(Tk.)</th>
+            </tr>
+            </thead>
+        </table>
     </div>
-
-
-<!--    <div class="page-title">-->
-<!--        <div class="invoice-title">-->
-<!--            Order Summary-->
-<!--        </div>-->
-<!--    </div>-->
-
-<!--    <div class="page-user-info">-->
-<!--        <div class="user-info-container">-->
-<!--            <div class="user-info">-->
-<!--                <div>Date: 2025-06-25</div>-->
-<!--                <div>Md. Hasib (Md. Hasib)</div>-->
-<!--                <div>Route: Kazipara 2</div>-->
-<!--            </div>-->
-<!--            <div class="distributor-info">-->
-<!--                <div>ARABI TRADE CENTER</div>-->
-<!--                <div>Dhaka</div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
     <table class="product-table" cellspacing="0">
-        <thead>
-        <tr>
-            <th class="text-left">Product</th>
-            <th class="text-right">Qty(pcs)</th>
-            <th class="text-right">Bonus(pcs)</th>
-            <th class="text-right">Total Qty(pcs)</th>
-            <th class="text-right">Total Qty(ctn)</th>
-            <th class="text-right">Amount(Tk.)</th>
-        </tr>
-        </thead>
         <tbody>
         <% for (let i = 0; i < products.length; i++) { %>
             <tr>
@@ -135,7 +76,6 @@
         <% } %>
         </tbody>
     </table>
-
     <table class="summary-table" cellspacing="0">
         <tr>
             <th class="text-left">Discount: TAAQA_Orange_Juice_160ml(2.5 tk disc above 4 pc)</th>

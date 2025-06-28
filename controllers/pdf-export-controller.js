@@ -21,27 +21,20 @@ const preparePdf = async (data) => {
     // Set content and wait for initial load
     await page.setContent(data, { waitUntil: "networkidle0" });
 
-    // Properly wait for paged.js to complete rendering
-    await page.evaluate(async () => {
-        // Check if paged.js is loaded
-        if (typeof PagedPolyfill !== 'undefined') {
-            // Start the rendering process
-            PagedPolyfill.preview();
-
-            // Wait for rendering to complete
-            await new Promise((resolve) => {
-                const checkComplete = () => {
-                    const pages = document.querySelectorAll('.pagedjs_page');
-                    if (pages.length > 0) {
-                        resolve();
-                    } else {
-                        setTimeout(checkComplete, 100);
-                    }
-                };
-                checkComplete();
-            });
-        }
+    await page.evaluate(() => {
+        return new Promise((resolve) => {
+            if (typeof PagedPolyfill !== 'undefined') {
+                const timeout = setTimeout(() => resolve(), 5000); // max wait 5s
+                document.addEventListener("pagedjs:rendered", () => {
+                    clearTimeout(timeout);
+                    resolve();
+                });
+            } else {
+                resolve();
+            }
+        });
     });
+
 
     // Generate PDF with proper margins
     const pdfBuffer = await page.pdf({

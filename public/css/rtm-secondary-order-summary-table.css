@@ -1,9 +1,16 @@
 @page {
-    margin: 0 50px 50px 50px;
+    size: A4;
+    margin: 64mm 5mm 5mm 5mm;
 
-    @top-center {
-        content: element(page-header);
+    @top-left {
+        content: element(pageHeader);
     }
+}
+
+.page-header {
+    position: running(pageHeader);
+    width: 195mm;
+    height: 64mm;
 }
 
 body {
@@ -11,17 +18,12 @@ body {
     font-size: 0.8rem;
 }
 
-/*.invoice-container {*/
-/*    padding: 0;*/
-/*    page-break-after: always;*/
-/*}*/
-
 .invoice-header {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 1rem;
-    padding: 0.5rem;
+    padding: 0.8rem;
     border-bottom: 1px solid black;
 }
 
@@ -63,17 +65,37 @@ body {
 
 .product-table {
     width: 100%;
-    margin-bottom: 5px;
+    page-break-inside: auto;
+    border-collapse: collapse;
 
     thead th {
         border-bottom: 1px solid black;
+    }
+
+    thead th:first-child {
+        min-width: 80mm;
+    }
+
+    thead th:not(:first-child) {
+        min-width: 24mm;
     }
 
     tbody tr {
         td {
             padding: 0.2rem 0;
         }
+        td:first-child {
+            width: 80mm;
+        }
+        td:not(:first-child) {
+            min-width: 24mm;
+        }
     }
+}
+
+.product-table tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
 }
 
 .text-center {
@@ -95,7 +117,9 @@ body {
 }
 
 .invoice-container {
-    position: running(header);
+    break-inside: avoid;
 }
 
-
+.page-break {
+    break-after: auto;
+}
