@@ -9,7 +9,7 @@
 
 .page-header {
     position: running(pageHeader);
-    width: 195mm;
+    width: 180mm;
     height: 75mm;
 }
 
@@ -75,11 +75,11 @@ body {
     }
 
     thead th:first-child {
-        min-width: 80mm;
+        min-width: 70mm;
     }
 
     thead th:not(:first-child) {
-        min-width: 24mm;
+        min-width: 22mm;
     }
 
     tbody tr {
@@ -87,10 +87,10 @@ body {
             padding: 0.2rem 0;
         }
         td:first-child {
-            width: 80mm;
+            width: 70mm;
         }
         td:not(:first-child) {
-            min-width: 24mm;
+            min-width: 22mm;
         }
     }
 }
