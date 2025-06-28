@@ -39,14 +39,7 @@ const preparePdf = async (data) => {
     // Generate PDF with proper margins
     const pdfBuffer = await page.pdf({
         format: "A4",
-        printBackground: true,
-        margin: {
-            top: "10mm",    // Increased to accommodate headers
-            bottom: "10mm",
-            left: "10mm",
-            right: "10mm"
-        },
-        displayHeaderFooter: false
+        printBackground: true
     });
 
     await browser.close();

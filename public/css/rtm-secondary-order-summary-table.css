@@ -1,6 +1,6 @@
 @page {
     size: A4;
-    margin: 64mm 5mm 5mm 5mm;
+    margin: 75mm 15mm 20mm 15mm;
 
     @top-left {
         content: element(pageHeader);
@@ -10,12 +10,12 @@
 .page-header {
     position: running(pageHeader);
     width: 195mm;
-    height: 64mm;
+    height: 75mm;
 }
 
 body {
     font-family: Muli, Arial, Helvetica, sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
 }
 
 .invoice-header {
@@ -23,7 +23,9 @@ body {
     flex-direction: row;
     align-items: center;
     gap: 1rem;
-    padding: 0.8rem;
+    padding-top: 20mm;
+    padding-left: 1rem;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid black;
 }
 
