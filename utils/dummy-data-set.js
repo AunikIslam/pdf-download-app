@@ -934,5 +934,444 @@ exports.porudcts = [
         totalQty: 21,
         totalQty2: 21,
         amount: 525.0
+    }
+]
+
+exports.orderSummary = [
+    {
+        orderId: 1,
+        products: [
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            }
+        ]
     },
+    {
+        orderId: 2,
+        products: [
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            }
+        ]
+    },
+    {
+        orderId: 3,
+        products: [
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            }
+        ]
+    },
+    {
+        orderId: 4,
+        products: [
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            }
+        ]
+    }
 ]

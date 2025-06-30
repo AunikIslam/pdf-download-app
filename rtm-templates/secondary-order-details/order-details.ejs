@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="https://fonts.googleapis.com/css?family=Muli:300,400,600,700" rel="stylesheet">
+    <style>
+        <%= styles %>
+    </style>
+</head>
+<body>
+<div class="invoice-container">
+    <%
+        const sliceSize = 25;
+    for (let i = 0; i < orders.length; i++) {
+        const products = orders[i].products;
+        const numberOfSlices = Math.ceil(products.length / sliceSize);
+    %>
+    <%
+    for (let sliceNo = 0; sliceNo < numberOfSlices; sliceNo++) {
+        const slicedProducts = products.slice((sliceNo * sliceSize), (sliceNo * sliceSize) + sliceSize);
+    %>
+    <div class="details-container">
+        <div class="half-cell">
+            <div class="invoice-header">
+                <img src="<%= orgLogo %>">
+                <div class="organization-info">
+                    <div>Route To Market Internation Limited</div>
+                    <div>222, Tejgaon Industrial Area, Dhaka-1208</div>
+                    <div>Phone: +8802-9886701 | Web: www.rtmbd.com</div>
+                </div>
+            </div>
+            <div class="page-user-info">
+                <div class="user-info-container">
+                    <div class="user-info">
+                        <div>Date: 2025-06-25(<%= orders[i].orderId %>)</div>
+                        <div>Md. Hasib (Md. Hasib)</div>
+                        <div>Route: Kazipara 2</div>
+                    </div>
+                    <div class="distributor-info">
+                        <div>ARABI TRADE CENTER</div>
+                        <div>Dhaka</div>
+                    </div>
+                </div>
+            </div>
+            <table class="product-table" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="text-left">Product</th>
+                    <th class="text-right">Qty</th>
+                    <th class="text-right">Bonus</th>
+                    <th class="text-right">Order</th>
+                    <th class="text-right">Rate</th>
+                    <th class="text-right">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <%
+                for (let j = 0; j < slicedProducts.length; j++) { %>
+                    <tr>
+                        <td class="text-left">
+                            <%= (sliceNo * sliceSize) + (j + 1) %>. <%= slicedProducts[j].name %>
+                        </td>
+                        <td class="text-right">
+                            <%= slicedProducts[j].quantity %>
+                        </td>
+                        <td class="text-right">
+                            <%= slicedProducts[j].bonus %>
+                        </td>
+                        <td class="text-right">
+                            <%= slicedProducts[j].totalQty %>
+                        </td>
+                        <td class="text-right">
+                            <%= slicedProducts[j].totalQty2 %>
+                        </td>
+                        <td class="text-right">
+                            <%= slicedProducts[j].amount %>
+                        </td>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+        <div class="half-cell">
+            <div class="invoice-header">
+                <img src="<%= orgLogo %>">
+                <div class="organization-info">
+                    <div>Route To Market Internation Limited</div>
+                    <div>222, Tejgaon Industrial Area, Dhaka-1208</div>
+                    <div>Phone: +8802-9886701 | Web: www.rtmbd.com</div>
+                </div>
+            </div>
+            <div class="page-user-info">
+                <div class="user-info-container">
+                    <div class="user-info">
+                        <div>Date: 2025-06-25(<%= orders[i].orderId %>)</div>
+                        <div>Md. Hasib (Md. Hasib)</div>
+                        <div>Route: Kazipara 2</div>
+                    </div>
+                    <div class="distributor-info">
+                        <div>ARABI TRADE CENTER</div>
+                        <div>Dhaka</div>
+                    </div>
+                </div>
+            </div>
+            <table class="product-table" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="text-left">Product</th>
+                    <th class="text-right">Qty</th>
+                    <th class="text-right">Bonus</th>
+                    <th class="text-right">Order</th>
+                    <th class="text-right">Rate</th>
+                    <th class="text-right">Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <%
+                for (let j = 0; j < slicedProducts.length; j++) { %>
+                    <tr>
+                        <td class="text-left">
+                            <%= (sliceNo * sliceSize) + (j + 1) %>. <%= slicedProducts[j].name %>
+                        </td>
+                        <td class="text-right">
+                            <%= slicedProducts[j].quantity %>
+                        </td>
+                        <td class="text-right">
+                            <%= slicedProducts[j].bonus %>
+                        </td>
+                        <td class="text-right">
+                            <%= slicedProducts[j].totalQty %>
+                        </td>
+                        <td class="text-right">
+                            <%= slicedProducts[j].totalQty2 %>
+                        </td>
+                        <td class="text-right">
+                            <%= slicedProducts[j].amount %>
+                        </td>
+                    </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <% } %>
+    <% if ((i + 1) % 2 === 0) { %>
+        <div class="page-break"></div>
+    <% } %>
+    <% } %>
+</div>
+
+<script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+</body>
+</html>

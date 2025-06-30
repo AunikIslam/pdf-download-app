@@ -1,16 +1,6 @@
 @page {
-    size: A4;
-    margin: 75mm 15mm 20mm 15mm;
-
-    @top-left {
-        content: element(pageHeader);
-    }
-}
-
-.page-header {
-    position: running(pageHeader);
-    width: 180mm;
-    height: 75mm;
+    size: A4 landscape;
+    margin: 10mm 13.5mm 10mm 13.5mm;
 }
 
 body {
@@ -18,12 +8,34 @@ body {
     font-size: 0.6rem;
 }
 
+.details-container {
+    display: flex;
+    flex-direction: row;
+    break-inside: auto;
+    page-break-inside: auto;
+}
+
+.details-container:not(:last-child) {
+    /*border-bottom: 1px solid black;*/
+}
+
+.half-cell {
+    width: 50%;
+    padding: 2mm;
+    box-sizing: border-box;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.half-cell:first-child {
+    border-right: 1px solid black;
+}
+
 .invoice-header {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 1rem;
-    padding-top: 20mm;
     padding-left: 1rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid black;
@@ -32,14 +44,6 @@ body {
 .organization-info {
     display: flex;
     flex-direction: column;
-    flex: 1 0 0;
-}
-
-.invoice-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-align: center;
-    margin: 1rem;
 }
 
 .user-info-container {
@@ -61,25 +65,16 @@ body {
     flex-direction: column;
 }
 
-.title-table {
-    margin: 1rem auto;
-}
-
 .product-table {
-    width: 100%;
     page-break-inside: auto;
     border-collapse: collapse;
 
-    thead th {
-        border-bottom: 1px solid black;
-    }
-
     thead th:first-child {
-        min-width: 70mm;
+        min-width: 60mm;
     }
 
     thead th:not(:first-child) {
-        min-width: 22mm;
+        min-width: 14mm;
     }
 
     tbody tr {
@@ -87,10 +82,10 @@ body {
             padding: 0.2rem 0;
         }
         td:first-child {
-            width: 70mm;
+            width: 60mm;
         }
         td:not(:first-child) {
-            min-width: 22mm;
+            min-width: 14mm;
         }
     }
 }
@@ -120,8 +115,11 @@ body {
 
 .invoice-container {
     break-inside: avoid;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 .page-break {
-    break-after: auto;
+    page-break-after: always;
+    break-after: page;
 }

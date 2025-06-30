@@ -18,7 +18,6 @@ const preparePdf = async (data) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    // Set content and wait for initial load
     await page.setContent(data, { waitUntil: "networkidle0" });
 
     await page.evaluate(() => {
@@ -36,10 +35,10 @@ const preparePdf = async (data) => {
     });
 
 
-    // Generate PDF with proper margins
     const pdfBuffer = await page.pdf({
         format: "A4",
-        printBackground: true
+        printBackground: true,
+        preferCSSPageSize: true,
     });
 
     await browser.close();
@@ -142,24 +141,36 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
 
 exports.secondaryOrderSummaryForRtm = async (req, res) => {
     const imagePath = path.join(rootDir, 'public', 'logos', 'rtm.png');
+    const imagePathForDetails = path.join(rootDir, 'public', 'logos', 'rtm-small.png');
     const base64 = fs.readFileSync(imagePath).toString('base64');
+    const base64ForDetails = fs.readFileSync(imagePathForDetails).toString('base64');
     const orgLogo = `data:image/png;base64,${base64}`;
-    const cssPath = path.join(rootDir, 'public', 'css', 'rtm-secondary-order-summary-table.css');
-    const styles = fs.readFileSync(cssPath, 'utf8');
+    const orgLogoForDetails = `data:image/png;base64,${base64ForDetails}`;
+    const cssPathForTopSheet = path.join(rootDir, 'public', 'css', 'rtm-secondary-order-top-sheet.css');
+    const stylesForTopSheet = fs.readFileSync(cssPathForTopSheet, 'utf8');
+    const cssPathForDetails = path.join(rootDir, 'public', 'css', 'rtm-secondary-order-details.css');
+    const stylesForDetails = fs.readFileSync(cssPathForDetails, 'utf8');
 
     try {
-        const filePath = path.join(rootDir, 'templates', 'secondary-order-details', 'rtm-template.ejs');
-        const content = await ejs.renderFile(filePath, {
+        const filePathForTopSheet = path.join(rootDir, 'rtm-templates', 'secondary-order-details', 'top-sheet.ejs');
+        const contentOfTopSheet = await ejs.renderFile(filePathForTopSheet, {
             orgLogo: orgLogo,
-            styles: styles,
+            styles: stylesForTopSheet,
             products: dummyDataSet.porudcts
+        });
+
+        const filePathForDetails = path.join(rootDir, 'rtm-templates', 'secondary-order-details', 'order-details.ejs');
+        const content = await ejs.renderFile(filePathForDetails, {
+            orgLogo: orgLogoForDetails,
+            styles: stylesForDetails,
+            orders: dummyDataSet.orderSummary
         });
 
         preparePdf(content)
             .then((pdfData) => {
             res.set({
                 "Content-Type": "application/pdf",
-                "Content-Disposition": 'attachment; filename="table.pdf"',
+                "Content-Disposition": `attachment; filename=${Date.now()}.pdf`,
                 "Content-Length": pdfData.length,
             });
             res.send(pdfData);
