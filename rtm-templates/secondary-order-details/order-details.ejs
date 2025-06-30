@@ -11,7 +11,7 @@
 <body>
 <div class="invoice-container">
     <%
-        const sliceSize = 25;
+    const sliceSize = 25;
     for (let i = 0; i < orders.length; i++) {
         const products = orders[i].products;
         const numberOfSlices = Math.ceil(products.length / sliceSize);

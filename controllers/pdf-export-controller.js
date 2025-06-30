@@ -13,12 +13,13 @@ const BaseService = require('../services/base-service');
 const endpoints = require('../config/endpoints');
 const utilFunctions = require('../utils/util-functions');
 const baseUrls = require('../config/base-urls');
+const {PDFDocument} = require('pdf-lib');
 
-const preparePdf = async (data) => {
+const preparePdf = async (data, isLandscape = false) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    await page.setContent(data, { waitUntil: "networkidle0" });
+    await page.setContent(data, {waitUntil: "networkidle0"});
 
     await page.evaluate(() => {
         return new Promise((resolve) => {
@@ -38,7 +39,7 @@ const preparePdf = async (data) => {
     const pdfBuffer = await page.pdf({
         format: "A4",
         printBackground: true,
-        preferCSSPageSize: true,
+        landscape: isLandscape
     });
 
     await browser.close();
@@ -118,11 +119,11 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
         });
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        await page.setContent(content, { waitUntil: "networkidle0" });
+        await page.setContent(content, {waitUntil: "networkidle0"});
         const pdfBuffer = await page.pdf({
             format: "A4",
             printBackground: true,
-            margin: { top: "20mm", bottom: "20mm", left: "10mm", right: "10mm" },
+            margin: {top: "20mm", bottom: "20mm", left: "10mm", right: "10mm"},
         });
 
         await browser.close();
@@ -153,33 +154,49 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 
     try {
         const filePathForTopSheet = path.join(rootDir, 'rtm-templates', 'secondary-order-details', 'top-sheet.ejs');
-        const contentOfTopSheet = await ejs.renderFile(filePathForTopSheet, {
-            orgLogo: orgLogo,
-            styles: stylesForTopSheet,
-            products: dummyDataSet.porudcts
-        });
-
         const filePathForDetails = path.join(rootDir, 'rtm-templates', 'secondary-order-details', 'order-details.ejs');
-        const content = await ejs.renderFile(filePathForDetails, {
-            orgLogo: orgLogoForDetails,
-            styles: stylesForDetails,
-            orders: dummyDataSet.orderSummary
-        });
 
-        preparePdf(content)
-            .then((pdfData) => {
-            res.set({
-                "Content-Type": "application/pdf",
-                "Content-Disposition": `attachment; filename=${Date.now()}.pdf`,
-                "Content-Length": pdfData.length,
-            });
-            res.send(pdfData);
-        })
-            .catch((err) => {
-                console.log(`Error during pdf generation`)
+        const [contentOfTopSheet, contentOfOrderDetails] = await Promise.all([
+            ejs.renderFile(filePathForTopSheet, {
+                orgLogo: orgLogo,
+                styles: stylesForTopSheet,
+                products: dummyDataSet.porudcts
+            }),
+            ejs.renderFile(filePathForDetails, {
+                orgLogo: orgLogoForDetails,
+                styles: stylesForDetails,
+                orders: dummyDataSet.orderSummary
             })
+        ]);
+
+        const [portraitPdf, landscapePdf, mergedPdf] = await Promise.all([
+            preparePdf(contentOfTopSheet),
+            preparePdf(contentOfOrderDetails, true),
+            PDFDocument.create()
+        ]);
+
+        const [portraitDoc, landscapeDoc] = await Promise.all([
+            PDFDocument.load(portraitPdf),
+            PDFDocument.load(landscapePdf)
+        ]);
+
+        const [portraitPages, landscapePages] = await Promise.all([
+            mergedPdf.copyPages(portraitDoc, portraitDoc.getPageIndices()),
+            mergedPdf.copyPages(landscapeDoc, landscapeDoc.getPageIndices())
+        ]);
+
+        portraitPages.forEach((portraitPage) => mergedPdf.addPage(portraitPage));
+        landscapePages.forEach((landscapePage) => mergedPdf.addPage(landscapePage));
+
+        const finalPdf = await mergedPdf.save();
+        res.set({
+            "Content-Type": "application/pdf",
+            "Content-Disposition": `attachment; filename=${Date.now()}.pdf`,
+            "Content-Length": finalPdf.length,
+        });
+        res.send(finalPdf);
     } catch (error) {
+        res.status(500).json(new ApiResponse.Error(['Failed to generate pdf. Contact support']));
         console.log(`Error from secondary order pdf export controller: ${error.message}`);
     }
-
 }

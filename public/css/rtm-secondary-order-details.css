@@ -15,8 +15,8 @@ body {
     page-break-inside: auto;
 }
 
-.details-container:not(:last-child) {
-    /*border-bottom: 1px solid black;*/
+.details-container:not(:first-child) {
+    border-top: 1px solid black;
 }
 
 .half-cell {
