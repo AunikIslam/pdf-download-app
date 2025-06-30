@@ -118,6 +118,12 @@ body {
     margin-left: auto;
 }
 
+.summary-table tr:last-child {
+    th {
+        padding-top: 1rem;
+    }
+}
+
 .invoice-container {
     break-inside: avoid;
 }

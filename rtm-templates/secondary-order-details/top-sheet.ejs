@@ -70,7 +70,7 @@
                     <%= products[i].totalQty2 %>
                 </td>
                 <td class="text-right">
-                    <%= products[i].amount %>
+                    <%= utilFunctions.currencyPipe(products[i].amount) %>
                 </td>
             </tr>
         <% } %>
@@ -79,15 +79,19 @@
     <table class="summary-table" cellspacing="0">
         <tr>
             <th class="text-left">Discount: TAAQA_Orange_Juice_160ml(2.5 tk disc above 4 pc)</th>
-            <th class="text-right">107</th>
+            <th class="text-right">107.5</th>
         </tr>
         <tr>
             <th class="text-left">Discount: TAAQA_Apple_Juice_160ml(2.5 tk disc above 4 pc)</th>
-            <th class="text-right">85</th>
+            <th class="text-right">85.05</th>
         </tr>
         <tr>
             <th class="text-left">Discount: TAAQA_Lemon_Juice_160ml(2.5 tk disc above 4 pc)</th>
-            <th class="text-right">52</th>
+            <th class="text-right">52.8</th>
+        </tr>
+        <tr>
+            <th class="text-left"><%= utilFunctions.convertNumberToWords(1230.0)%></th>
+            <th class="text-right">1230.0</th>
         </tr>
     </table>
 </div>

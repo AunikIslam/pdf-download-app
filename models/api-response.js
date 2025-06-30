@@ -1,4 +1,4 @@
-const pipes = require('../helpers/pipes');
+const utilFunctions = require('../utils/util-functions')
 exports.Success = class Success {
     constructor(content = null, page = {}, statusCode = 200, statusMessage = 'Successful') {
         if (typeof content === 'string') {
@@ -13,7 +13,7 @@ exports.Success = class Success {
         this.page = page;
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
-        this.timestamp = pipes.datePipe(new Date(), 'yyyy-MM-dd hh:mm:ss');
+        this.timestamp = utilFunctions.datePipe(new Date(), 'yyyy-MM-dd hh:mm:ss');
     }
 };
 
@@ -25,6 +25,6 @@ exports.Error = class Error {
             this.error = errors[0];
         }
         this.statusCode = statusCode;
-        this.timestamp = pipes.datePipe(new Date(), 'yyyy-MM-dd hh:mm:ss');
+        this.timestamp = utilFunctions.datePipe(new Date(), 'yyyy-MM-dd hh:mm:ss');
     }
 };

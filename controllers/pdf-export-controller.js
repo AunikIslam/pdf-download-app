@@ -7,7 +7,6 @@ const fs = require('fs');
 const TemplateListResponse = require('../models/template-list-response');
 const ApiResponse = require('../models/api-response');
 const dummyDataSet = require('../utils/dummy-data-set');
-const pipes = require('../helpers/pipes');
 const PdfGenerateAction = require('../models/pdf-generate-action');
 const BaseService = require('../services/base-service');
 const endpoints = require('../config/endpoints');
@@ -24,7 +23,7 @@ const preparePdf = async (data, isLandscape = false) => {
     await page.evaluate(() => {
         return new Promise((resolve) => {
             if (typeof PagedPolyfill !== 'undefined') {
-                const timeout = setTimeout(() => resolve(), 5000); // max wait 5s
+                const timeout = setTimeout(() => resolve(), 5000);
                 document.addEventListener("pagedjs:rendered", () => {
                     clearTimeout(timeout);
                     resolve();
@@ -113,9 +112,9 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
         const filePath = path.join(rootDir, 'templates', 'secondary-order-details', templateName);
         const content = await ejs.renderFile(filePath, {
             order: secondaryOrder,
-            isSfa: isSfa,
-            pipes: pipes,
-            styles: styles
+            isSfa,
+            utilFunctions,
+            styles
         });
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
@@ -160,12 +159,14 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
             ejs.renderFile(filePathForTopSheet, {
                 orgLogo: orgLogo,
                 styles: stylesForTopSheet,
-                products: dummyDataSet.porudcts
+                products: dummyDataSet.porudcts,
+                utilFunctions
             }),
             ejs.renderFile(filePathForDetails, {
                 orgLogo: orgLogoForDetails,
                 styles: stylesForDetails,
-                orders: dummyDataSet.orderSummary
+                orders: dummyDataSet.orderSummary,
+                utilFunctions
             })
         ]);
 

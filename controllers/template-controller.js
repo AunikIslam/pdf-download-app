@@ -7,7 +7,7 @@ const fs = require('fs').promises;
 const TemplateListResponse = require('../models/template-list-response');
 const ApiResponse = require('../models/api-response');
 const dummyDataSet = require('../utils/dummy-data-set');
-const pipes = require('../helpers/pipes');
+const utilFunctions = require('../utils/util-functions');
 const PdfGenerateAction = require('../models/pdf-generate-action');
 const TemplateAddRequest = require('../models/template-add-request');
 
@@ -37,7 +37,7 @@ exports.getTemplates = async (req, res) => {
                 const fullPath = path.join(dirPath, name);
                 const content = await ejs.renderFile(fullPath, {
                     order: dummyDataSet.secondaryOrderDummyData,
-                    pipes: pipes,
+                    utilFunctions,
                     isSfa: true,
                     styles: ''
                 });
