@@ -676,6 +676,46 @@ exports.orderSummary = [
                 totalQty: 21,
                 totalQty2: 21,
                 amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
+            },
+            {
+                name: 'TAAQA Lemon Juice 160ml (1X10) (TAQ003)',
+                quantity: 21,
+                bonus: 0,
+                totalQty: 21,
+                totalQty2: 21,
+                amount: 525.0
             }
         ]
     },

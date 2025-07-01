@@ -14,34 +14,36 @@ const utilFunctions = require('../utils/util-functions');
 const baseUrls = require('../config/base-urls');
 const {PDFDocument} = require('pdf-lib');
 
-const preparePdf = async (data, isLandscape = false) => {
-    const browser = await puppeteer.launch();
+const preparePdf = async (data, browser, isLandscape = false) => {
     const page = await browser.newPage();
-
     await page.setContent(data, {waitUntil: "networkidle0"});
-
     await page.evaluate(() => {
         return new Promise((resolve) => {
             if (typeof PagedPolyfill !== 'undefined') {
-                const timeout = setTimeout(() => resolve(), 5000);
+                let resolved = false;
+                const timeout = setTimeout(() => {
+                    if (!resolved) {
+                        resolved = true;
+                        resolve();
+                    }
+                }, 1000);
                 document.addEventListener("pagedjs:rendered", () => {
-                    clearTimeout(timeout);
-                    resolve();
+                    if (!resolved) {
+                        clearTimeout(timeout);
+                        resolved = true;
+                        resolve();
+                    }
                 });
             } else {
                 resolve();
             }
         });
     });
-
-
     const pdfBuffer = await page.pdf({
         format: "A4",
         printBackground: true,
         landscape: isLandscape
     });
-
-    await browser.close();
     return pdfBuffer;
 }
 
@@ -142,14 +144,17 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
 exports.secondaryOrderSummaryForRtm = async (req, res) => {
     const imagePath = path.join(rootDir, 'public', 'logos', 'rtm.png');
     const imagePathForDetails = path.join(rootDir, 'public', 'logos', 'rtm-small.png');
+    const cssPathForTopSheet = path.join(rootDir, 'public', 'css', 'rtm-secondary-order-top-sheet.css');
+    const cssPathForDetails = path.join(rootDir, 'public', 'css', 'rtm-secondary-order-details.css');
+
     const base64 = fs.readFileSync(imagePath).toString('base64');
     const base64ForDetails = fs.readFileSync(imagePathForDetails).toString('base64');
+    const stylesForTopSheet = fs.readFileSync(cssPathForTopSheet, 'utf8');
+    const stylesForDetails = fs.readFileSync(cssPathForDetails, 'utf8');
+
     const orgLogo = `data:image/png;base64,${base64}`;
     const orgLogoForDetails = `data:image/png;base64,${base64ForDetails}`;
-    const cssPathForTopSheet = path.join(rootDir, 'public', 'css', 'rtm-secondary-order-top-sheet.css');
-    const stylesForTopSheet = fs.readFileSync(cssPathForTopSheet, 'utf8');
-    const cssPathForDetails = path.join(rootDir, 'public', 'css', 'rtm-secondary-order-details.css');
-    const stylesForDetails = fs.readFileSync(cssPathForDetails, 'utf8');
+
 
     try {
         const filePathForTopSheet = path.join(rootDir, 'rtm-templates', 'secondary-order-details', 'top-sheet.ejs');
@@ -170,11 +175,12 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
             })
         ]);
 
-        const [portraitPdf, landscapePdf, mergedPdf] = await Promise.all([
-            preparePdf(contentOfTopSheet),
-            preparePdf(contentOfOrderDetails, true),
-            PDFDocument.create()
-        ]);
+        const browser = await puppeteer.launch({ headless: "new" });
+        const portraitPdf = await preparePdf(contentOfTopSheet, browser);
+        const landscapePdf = await preparePdf(contentOfOrderDetails, browser, true);
+        const mergedPdf = await PDFDocument.create();
+
+        await browser.close();
 
         const [portraitDoc, landscapeDoc] = await Promise.all([
             PDFDocument.load(portraitPdf),
