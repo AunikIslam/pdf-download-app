@@ -24,13 +24,14 @@ class BaseService {
         })
     }
 
-    static getSelfInfo(endpoint) {
+    static validateToken(endpoint) {
         return this.getData(endpoint)
             .then(response => {
                 return response.data;
             })
             .catch(error => {
-                console.log(`Error from base service self info api: ${error.message}`);
+                console.log(``)
+                throw new Error(`${error.message}`);
             })
     }
 
@@ -40,7 +41,7 @@ class BaseService {
                 return response.data.data.content;
             })
             .catch(error => {
-                console.log(`Error from base service permission api: ${error.message}`);
+                throw new Error(`${error.message}`);
             })
     }
 

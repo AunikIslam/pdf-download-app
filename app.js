@@ -16,19 +16,24 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-app.use('/', async (req, res, next) => {
+const validateToken = async (req, res, next) => {
     try {
-        const token = req.headers.authorization;
+        let token;
+        if (req.headers.authorization) {
+            token = req.headers.authorization;
+        } else {
+            token = `Bearer ${req.query.access_token}`;
+        }
         BaseService.setToken(token)
-        req.self = await BaseService.getSelfInfo(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth))
-        console.log(`Query 3 ${req.query.time}`);
+        req.self = await BaseService.validateToken(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth));
         next();
     } catch (error) {
+        console.log(`Error from token validate api: ${error.message}`);
         return res.status(401);
     }
-});
+}
 
-app.use('/', async (req, res, next) => {
+const getPermissions = async (req, res, next) => {
     try {
         req.permissions = await BaseService.getPermissionSet(utilFunctions.prepareApiUrl(endpoints.self_authorities, baseUrls.f_base));
         next();
@@ -36,7 +41,9 @@ app.use('/', async (req, res, next) => {
         console.log(`Error from permission set api: ${error.message}`);
         return res.status(401);
     }
-});
+}
+
+app.use('/', validateToken, getPermissions);
 
 app.use('/api/v1/pdf-generation', templateRoutes);
 app.use('/api/v1/pdf-export', pdfExportRoutes)
