@@ -11,7 +11,7 @@
 <% if (isSfa === true) { %>
     <div class="order-template-container">
         <div class="order-header-section">
-            <img class="template-org-logo" src="../src/assets/images/logos/template-org-logo.png">
+            <img src="<%= orgLogo %>">
             <div class="template-mid-section">
                 <div class="template-mid-section-child">
                     <div>Distributor:</div>
@@ -110,7 +110,7 @@
                     <%= utilFunctions.currencyPipe(orderDetail.Vat) %>
                 </td>
                 <td class="text-right">
-                    <%= utilFunctions.currencyPipe(orderDetail.DiscountTotal) %>(<%= pipes.currencyPipe(orderDetail.Discount) %>
+                    <%= utilFunctions.currencyPipe(orderDetail.DiscountTotal) %>(<%= utilFunctions.currencyPipe(orderDetail.Discount) %>
                     %)
                 </td>
                 <td class="text-right">

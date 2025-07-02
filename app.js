@@ -21,9 +21,10 @@ app.use('/', async (req, res, next) => {
         const token = req.headers.authorization;
         BaseService.setToken(token)
         req.self = await BaseService.getSelfInfo(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth))
+        console.log(`Query 3 ${req.query.time}`);
         next();
     } catch (error) {
-        res.status(401);
+        return res.status(401);
     }
 });
 
@@ -33,6 +34,7 @@ app.use('/', async (req, res, next) => {
         next();
     } catch (error) {
         console.log(`Error from permission set api: ${error.message}`);
+        return res.status(401);
     }
 });
 

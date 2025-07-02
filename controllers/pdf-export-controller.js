@@ -13,6 +13,7 @@ const endpoints = require('../config/endpoints');
 const utilFunctions = require('../utils/util-functions');
 const baseUrls = require('../config/base-urls');
 const {PDFDocument} = require('pdf-lib');
+const {response} = require("express");
 
 const preparePdf = async (data, browser, isLandscape = false) => {
     const page = await browser.newPage();
@@ -48,15 +49,16 @@ const preparePdf = async (data, browser, isLandscape = false) => {
 }
 
 exports.exportSecondaryOrderDetails = async (req, res) => {
-    let secondaryOrder;
     let isSfa = false;
     let canExport = false;
     const permissions = req.permissions;
     const self = req.self;
     const orgId = self.orgId;
-    let templateName = null;
     const cssPath = path.join(rootDir, 'public', 'css', 'table-template.css');
     const styles = fs.readFileSync(cssPath, 'utf8');
+    const imagePath = path.join(rootDir, 'public', 'logos', `${self.orgCode}.png`);
+    const base64 = fs.readFileSync(imagePath).toString('base64');
+    const orgLogo = `data:image/png;base64,${base64}`;
 
     const sellingPricePermission = permissions.filter(permission => permission.name === 'SECONDARY_ORDER_SELLING_PRICE')[0];
     const tpNoDiscountPermission = permissions.filter(permission => permission.name === 'SECONDARY_ORDER_TP_NO_DISCOUNT')[0];
@@ -87,57 +89,63 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
     }
 
     try {
-        secondaryOrder = await BaseService.getSecondaryOrderDetails(utilFunctions
-            .prepareApiUrl(`${endpoints.secondary_order_details}/${req.params.orderId}`, baseUrls.sfa_url));
+        const secondaryOrder = await BaseService.getSecondaryOrderDetails(utilFunctions
+            .prepareApiUrl(`${endpoints.secondary_order_details}/${req.params.orderId}`, baseUrls.sfa_url))
+            .catch(error => {
+                throw new Error(`Failed while fetching order details. Contact Support`)
+            });
 
-    } catch (error) {
-        console.log(`Error from secondary order pdf export controller: ${error.message}`);
-    }
-
-    try {
         const data = await PdfGenerateAction.findOne({
             where: {
                 action: 'secondary-order-details',
                 organization_id: orgId
             }
-        });
+        })
+            .catch(error => {
+                throw new Error(`Failed while template. Contact Support`);
+            });
+
         if (!data) {
             return res.status(500).json(new ApiResponse.Error(['Template not found. Contact support'], 500));
         }
-        templateName = data.dataValues.template_name;
 
-    } catch (error) {
-        console.log(`Error from secondary order pdf export controller: ${error.message}`);
-    }
+        const templateName = data.dataValues.template_name;
 
-    try {
         const filePath = path.join(rootDir, 'templates', 'secondary-order-details', templateName);
+
         const content = await ejs.renderFile(filePath, {
             order: secondaryOrder,
+            orgLogo,
             isSfa,
             utilFunctions,
             styles
-        });
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.setContent(content, {waitUntil: "networkidle0"});
-        const pdfBuffer = await page.pdf({
-            format: "A4",
-            printBackground: true,
-            margin: {top: "20mm", bottom: "20mm", left: "10mm", right: "10mm"},
+        })
+            .catch(error => {
+                throw new Error(`Failed while rendering template. Contact Support`);
+            })
+
+        const browser = await puppeteer.launch().catch(error => {
+            throw new Error(`Failed while launching browser`);
         });
 
-        await browser.close();
+        const finalPdf = await preparePdf(content, browser).catch(error => {
+            throw new Error(`Failed while preparing pdf. Contact Support`);
+        });
+
+        await browser.close().catch(error => {
+            throw new Error(`Failed while closing browser. Contact Support`);
+        });
 
         res.set({
             "Content-Type": "application/pdf",
-            "Content-Disposition": 'attachment; filename="table.pdf"',
-            "Content-Length": pdfBuffer.length,
+            "Content-Disposition": `attachment; filename="${Date.now()}"`,
+            "Content-Length": finalPdf.length,
         });
-        res.send(pdfBuffer);
+        res.send(finalPdf);
 
     } catch (error) {
-        console.log(`Error from secondary order pdf export controller: ${error.message}`);
+        console.error(`Error from secondary order pdf export controller: ${error.message}`);
+        return res.status(500).json(new ApiResponse.Error(['Failed to generate pdf. Contact support']));
     }
 }
 
@@ -173,24 +181,39 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
                 orders: dummyDataSet.orderSummary,
                 utilFunctions
             })
-        ]);
+        ])
+            .catch((error) => {
+                throw new Error(`Failed while rendering template. Contact Support`);
+            });
 
-        const browser = await puppeteer.launch({ headless: "new" });
-        const portraitPdf = await preparePdf(contentOfTopSheet, browser);
-        const landscapePdf = await preparePdf(contentOfOrderDetails, browser, true);
+        const browser = await puppeteer.launch({headless: "new"}).catch(error => {
+            throw new Error(`Failed while launching browser`);
+        });
+        const portraitPdf = await preparePdf(contentOfTopSheet, browser).catch(error => {
+            throw new Error(`Failed while preparing top sheet. Contact Support`);
+        });
+        const landscapePdf = await preparePdf(contentOfOrderDetails, browser, true).catch(error => {
+            throw new Error(`Failed while preparing order details. Contact Support`);
+        });
         const mergedPdf = await PDFDocument.create();
 
-        await browser.close();
+        await browser.close().catch(error => {
+            throw new Error(`Failed while closing browser. Contact Support`);
+        });
 
         const [portraitDoc, landscapeDoc] = await Promise.all([
             PDFDocument.load(portraitPdf),
             PDFDocument.load(landscapePdf)
-        ]);
+        ]).catch(error => {
+            throw new Error(`Failed while loading doc. Contact Support.`);
+        });
 
         const [portraitPages, landscapePages] = await Promise.all([
             mergedPdf.copyPages(portraitDoc, portraitDoc.getPageIndices()),
             mergedPdf.copyPages(landscapeDoc, landscapeDoc.getPageIndices())
-        ]);
+        ]).catch(error => {
+            throw new Error(`Failed while copying pages. Contact Support.`);
+        });
 
         portraitPages.forEach((portraitPage) => mergedPdf.addPage(portraitPage));
         landscapePages.forEach((landscapePage) => mergedPdf.addPage(landscapePage));
@@ -203,7 +226,6 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
         });
         res.send(finalPdf);
     } catch (error) {
-        res.status(500).json(new ApiResponse.Error(['Failed to generate pdf. Contact support']));
-        console.log(`Error from secondary order pdf export controller: ${error.message}`);
+        res.status(500).json(new ApiResponse.Error([error.message]));
     }
 }
