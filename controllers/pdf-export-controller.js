@@ -2,9 +2,7 @@ const puppeteer = require('puppeteer');
 const ejs = require('ejs');
 const path = require('path');
 const rootDir = require('../utils/path');
-const pdfGenerateAction = require('../models/pdf-generate-action');
 const fs = require('fs');
-const TemplateListResponse = require('../models/template-list-response');
 const ApiResponse = require('../models/api-response');
 const dummyDataSet = require('../utils/dummy-data-set');
 const PdfGenerateAction = require('../models/pdf-generate-action');
@@ -13,7 +11,6 @@ const endpoints = require('../config/endpoints');
 const utilFunctions = require('../utils/util-functions');
 const baseUrls = require('../config/base-urls');
 const {PDFDocument} = require('pdf-lib');
-const {response} = require("express");
 
 const preparePdf = async (data, browser, isLandscape = false) => {
     const page = await browser.newPage();
@@ -50,7 +47,6 @@ const preparePdf = async (data, browser, isLandscape = false) => {
 
 exports.exportSecondaryOrderDetails = async (req, res) => {
     let isSfa = false;
-    let canExport = false;
     const permissions = req.permissions;
     const self = req.self;
     const orgId = self.orgId;
@@ -69,7 +65,7 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
     const tpDiscountAuthorities = tpDiscountPermission ? tpDiscountPermission.authorities : [];
 
 
-    canExport = sellingPriceAuthorities.filter(authority => authority.name === 'SECONDARY_ORDER_SELLING_PRICE_VIEW_ORDER').length > 0
+    const canExport = sellingPriceAuthorities.filter(authority => authority.name === 'SECONDARY_ORDER_SELLING_PRICE_VIEW_ORDER').length > 0
         || tpNoDiscountAuthorities.filter(authority => authority.name === 'SECONDARY_ORDER_TP_NO_DISCOUNT_VIEW_ORDER').length > 0
         || tpDiscountAuthorities.filter(authority => authority.name === 'SECONDARY_ORDER_TP_DISCOUNT_VIEW_ORDER').length > 0;
 
@@ -138,7 +134,7 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
 
         res.set({
             "Content-Type": "application/pdf",
-            "Content-Disposition": `attachment; filename="${Date.now()}"`,
+            "Content-Disposition": `attachment; filename="${Date.now()}.pdf"`,
             "Content-Length": finalPdf.length,
         });
         res.send(finalPdf);

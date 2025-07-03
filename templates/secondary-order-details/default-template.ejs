@@ -11,25 +11,63 @@
 <% if (isSfa === true) { %>
     <div class="order-template-container">
         <div class="order-header-section">
-            <img src="<%= orgLogo %>">
-            <div class="template-mid-section">
-                <div class="template-mid-section-child">
-                    <div>Distributor:</div>
-                    <div><%= order.Distributor.Name %></div>
-                    <div>Code: <%= order.Distributor.Code %></div>
-                    <div><%= order.Distributor.Address %></div>
-                    <div><%= order.Distributor.Mobile %></div>
-                    <div><%= order.Distributor.Phone %></div>
-                </div>
+            <% if (orgLogo) { %>
+                <img src="<%= orgLogo %>">
+            <% } else { %>
+                <img class="template-org-logo" src="../src/assets/images/logos/template-org-logo.png">
+            <% } %>
 
-                <div class="template-mid-section-child">
-                    <div>Retailer:</div>
-                    <div><%= order.Customer.CustomerName %></div>
-                    <div>Code: <%= order.Customer.CustomerCode %></div>
-                    <div><%= order.Customer.Address %></div>
-                    <div><%= order.Customer.Mobile %></div>
-                </div>
+            <div class="template-mid-section">
+                <table class="template-mid-section-child">
+                    <tr>
+                        <th>Distributor:</th>
+                    </tr>
+                    <tr>
+                        <th><%= order.Distributor.Name %></th>
+                    </tr>
+                    <tr>
+                        <td>Code: <%= order.Distributor.Code %></td>
+                    </tr>
+                    <% if (order.Distributor.Address) { %>
+                        <tr>
+                            <td><%= order.Distributor.Address %></td>
+                        </tr>
+                    <% } %>
+                    <% if (order.Distributor.Mobile) { %>
+                        <tr>
+                            <td><%= order.Distributor.Mobile %></td>
+                        </tr>
+                    <% } %>
+                    <% if (order.Distributor.Phone) { %>
+                        <tr>
+                            <td><%= order.Distributor.Phone %></td>
+                        </tr>
+                    <% } %>
+                </table>
+
+                <table class="template-mid-section-child">
+                    <tr>
+                        <th>Retailer:</th>
+                    </tr>
+                    <tr>
+                        <th><%= order.Customer.CustomerName %></th>
+                    </tr>
+                    <tr>
+                        <td>Code: <%= order.Customer.CustomerCode %></td>
+                    </tr>
+                    <% if (order.Customer.Address) { %>
+                        <tr>
+                            <td><%= order.Customer.Address %></td>
+                        </tr>
+                    <% } %>
+                    <% if (order.Customer.Mobile) { %>
+                        <tr>
+                            <td><%= order.Customer.Mobile %></td>
+                        </tr>
+                    <% } %>
+                </table>
             </div>
+
             <table class="template-info-section">
                 <tr>
                     <td>Order</td>
@@ -110,7 +148,8 @@
                     <%= utilFunctions.currencyPipe(orderDetail.Vat) %>
                 </td>
                 <td class="text-right">
-                    <%= utilFunctions.currencyPipe(orderDetail.DiscountTotal) %>(<%= utilFunctions.currencyPipe(orderDetail.Discount) %>
+                    <%= utilFunctions.currencyPipe(orderDetail.DiscountTotal) %>
+                    (<%= utilFunctions.currencyPipe(orderDetail.Discount) %>
                     %)
                 </td>
                 <td class="text-right">
@@ -263,29 +302,66 @@
 
         <div class="template-order-remarks"><b>Comment:</b> This is default format.</div>
     </div>
-
 <% } else { %>
     <div class="order-template-container">
         <div class="order-header-section">
-            <img class="template-org-logo" src="../src/assets/images/logos/template-org-logo.png">
-            <div class="template-mid-section">
-                <div class="template-mid-section-child">
-                    <div>Distributor:</div>
-                    <div><%= order.distributor.name %></div>
-                    <div>Code: <%= order.distributor.code %></div>
-                    <div><%= order.distributor.address %></div>
-                    <div><%= order.distributor.mobile %></div>
-                    <div><%= order.distributor.phone %></div>
-                </div>
+            <% if (orgLogo) { %>
+                <img src="<%= orgLogo %>">
+            <% } else { %>
+                <img class="template-org-logo" src="../src/assets/images/logos/template-org-logo.png">
+            <% } %>
 
-                <div class="template-mid-section-child">
-                    <div>Retailer:</div>
-                    <div><%= order.customer.customerName %></div>
-                    <div>Code: <%= order.customer.customerCode %></div>
-                    <div><%= order.customer.address %></div>
-                    <div><%= order.customer.mobile %></div>
-                </div>
+            <div class="template-mid-section">
+                <table class="template-mid-section-child">
+                    <tr>
+                        <th>Distributor:</th>
+                    </tr>
+                    <tr>
+                        <th><%= order.distributor.name %></th>
+                    </tr>
+                    <tr>
+                        <td>Code: <%= order.distributor.code %></td>
+                    </tr>
+                    <% if (order.distributor.address) { %>
+                        <tr>
+                            <td><%= order.distributor.address %></td>
+                        </tr>
+                    <% } %>
+                    <% if (order.distributor.mobile) { %>
+                        <tr>
+                            <td><%= order.distributor.Mobile %></td>
+                        </tr>
+                    <% } %>
+                    <% if (order.distributor.phone) { %>
+                        <tr>
+                            <td><%= order.distributor.phone %></td>
+                        </tr>
+                    <% } %>
+                </table>
+
+                <table class="template-mid-section-child">
+                    <tr>
+                        <th>Retailer:</th>
+                    </tr>
+                    <tr>
+                        <th><%= order.customer.customerName %></th>
+                    </tr>
+                    <tr>
+                        <td>Code: <%= order.customer.customerCode %></td>
+                    </tr>
+                    <% if (order.customer.address) { %>
+                        <tr>
+                            <td><%= order.customer.address %></td>
+                        </tr>
+                    <% } %>
+                    <% if (order.customer.mobile) { %>
+                        <tr>
+                            <td><%= order.customer.mobile %></td>
+                        </tr>
+                    <% } %>
+                </table>
             </div>
+
             <table class="template-info-section">
                 <tr>
                     <td>Order</td>

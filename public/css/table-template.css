@@ -1,6 +1,7 @@
 body {
     font-family: Arial, Helvetica, sans-serif
 }
+
 .template-table {
     border-radius: 10px;
     font-size: 13px;
@@ -42,6 +43,7 @@ body {
         td:first-child {
             border-left: 2px solid #efefef;
         }
+
         td:last-child {
             border-right: 2px solid #efefef;
         }
@@ -51,6 +53,7 @@ body {
         td:first-child {
             border-bottom-left-radius: 10px;
         }
+
         td:last-child {
             border-bottom-right-radius: 10px;
         }
@@ -149,30 +152,24 @@ body {
     flex: 1 0 0;
     flex-direction: column;
     margin-left: 10%;
-    gap: 1rem;
 }
 
-.template-mid-section-child > div:first-child {
-    color: rgba(0, 0, 0, 1);
-    font-size: 2rem;
-    font-weight: bold;
+.template-mid-section-child tr {
+    th {
+        font-size: 1rem;
+        text-align: left;
+    }
+
+    td {
+        font-size: 0.8rem;
+    }
 }
 
-.template-mid-section-child > div:nth-child(2),
-.template-mid-section-child > div:nth-child(3){
-    color: rgba(0, 0, 0, 0.6);
-    font-weight: bold;
-}
-
-.template-mid-section-child > div:nth-child(4),
-.template-mid-section-child div:nth-child(5),
-.template-mid-section-child div:nth-child(6) {
-    color: rgba(0, 0, 0, 0.6);
-    font-weight: normal;
-}
-
-.template-info-section {
-    font-weight: normal;
+.template-mid-section-child tr:nth-child(2) {
+    th {
+        font-size: 0.8rem;
+        color: rgba(0, 0, 0, 0.6);
+    }
 }
 
 .template-info-section tr {
@@ -184,12 +181,16 @@ body {
 
     td:last-child {
         color: rgba(0, 0, 0, 1);
-        padding-left: 10px;
+        padding-left: 0.8rem;
     }
 }
 
 .template-info-section tr:first-child {
-    font-size: 30px;
+    font-size: 2rem;
+}
+
+.template-info-section tr:not(:first-child) {
+    font-size: 0.8rem;
 }
 
 .template-order-remarks {
@@ -203,5 +204,6 @@ body {
 }
 
 .secondary-order-details-summary {
+    font-size: 0.8rem;
     margin-left: auto;
 }
