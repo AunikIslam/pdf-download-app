@@ -1,4 +1,3 @@
-const puppeteer = require('puppeteer');
 const ejs = require('ejs');
 const path = require('path');
 const rootDir = require('../utils/path');
@@ -16,8 +15,11 @@ exports.getTemplates = async (req, res) => {
         const action = req.query.action;
         const organizationId = req.query.organizationId;
 
-        if (!action || !organizationId) {
-            res.status(400);
+        if (!action) {
+            return res.status(400).json(new ApiResponse.Error(['Action is required.'], 400));
+        }
+        if (!organizationId) {
+            return res.status(400).json(new ApiResponse.Error(['Organization Id is required.'], 400));
         }
         const dirPath = path.join(rootDir, 'templates', action);
 
@@ -29,7 +31,10 @@ exports.getTemplates = async (req, res) => {
                 }
             }),
             fs.readdir(dirPath)
-        ]);
+        ])
+            .catch(error => {
+                throw new Error(`Error while database retrieve: ${error.message}`)
+            });
 
         const templateFile = templateFiles.length > 0 ? templateFiles[0] : null;
         const files = await Promise.all(
@@ -39,7 +44,8 @@ exports.getTemplates = async (req, res) => {
                     order: dummyDataSet.secondaryOrderDummyData,
                     utilFunctions,
                     isSfa: true,
-                    styles: ''
+                    styles: '',
+                    orgLogo: null
                 });
                 return {
                     isSelected: false,
@@ -67,7 +73,7 @@ exports.getTemplates = async (req, res) => {
         const apiResponse = new ApiResponse.Success(listResponse, pageInfo);
         res.status(200).json(apiResponse);
     } catch (error) {
-        console.log(`Error from template list api${error.message}`);
+        console.log(`Error from template list api: ${error.message}`);
     }
 }
 
