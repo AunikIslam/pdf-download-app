@@ -1,4 +1,3 @@
-const puppeteer = require('puppeteer');
 const ejs = require('ejs');
 const path = require('path');
 const rootDir = require('../utils/path');
@@ -11,10 +10,11 @@ const endpoints = require('../config/endpoints');
 const utilFunctions = require('../utils/util-functions');
 const baseUrls = require('../config/base-urls');
 const {PDFDocument} = require('pdf-lib');
+const { chromium } = require('playwright');
 
-const preparePdf = async (data, browser, isLandscape = false) => {
-    const page = await browser.newPage();
-    await page.setContent(data, {waitUntil: "networkidle0"});
+const preparePdf = async (data, context, isLandscape = false) => {
+    const page = await context.newPage();
+    await page.setContent(data, { waitUntil: "load" });
     await page.evaluate(() => {
         return new Promise((resolve) => {
             if (typeof PagedPolyfill !== 'undefined') {
@@ -42,6 +42,7 @@ const preparePdf = async (data, browser, isLandscape = false) => {
         printBackground: true,
         landscape: isLandscape
     });
+    await page.close();
     return pdfBuffer;
 }
 
@@ -120,11 +121,10 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
                 throw new Error(`Failed while rendering template. Contact Support`);
             })
 
-        const browser = await puppeteer.launch().catch(error => {
-            throw new Error(`Failed while launching browser`);
-        });
+        const browser = await chromium.launch({ headless: true });
+        const context = await browser.newContext();
 
-        const finalPdf = await preparePdf(content, browser).catch(error => {
+        const finalPdf = await preparePdf(content, context).catch(error => {
             throw new Error(`Failed while preparing pdf. Contact Support`);
         });
 
@@ -182,16 +182,17 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
                 throw new Error(`Failed while rendering template. Contact Support`);
             });
 
-        const browser = await puppeteer.launch({headless: "new"}).catch(error => {
-            throw new Error(`Failed while launching browser`);
-        });
-        const portraitPdf = await preparePdf(contentOfTopSheet, browser).catch(error => {
-            throw new Error(`Failed while preparing top sheet. Contact Support`);
-        });
-        const landscapePdf = await preparePdf(contentOfOrderDetails, browser, true).catch(error => {
-            throw new Error(`Failed while preparing order details. Contact Support`);
-        });
-        const mergedPdf = await PDFDocument.create();
+        const browser = await chromium.launch({ headless: true });
+        const context = await browser.newContext();
+
+        const [portraitPdf, landscapePdf, mergedPdf] = await Promise.all([
+            await preparePdf(contentOfTopSheet, context),
+            await preparePdf(contentOfOrderDetails, context),
+            await PDFDocument.create()
+        ])
+            .catch((error) => {
+                throw new Error(`Failed while preparing pdf. Contact Support`);
+            });
 
         await browser.close().catch(error => {
             throw new Error(`Failed while closing browser. Contact Support`);

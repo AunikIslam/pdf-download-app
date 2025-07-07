@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, Helvetica, sans-serif
+    font-family: Inter, Helvetica, sans-serif
 }
 
 .template-table {
@@ -140,7 +140,7 @@ body {
 
 .order-header-section {
     display: grid;
-    grid-template-columns: 0.5fr 1.5fr 1.5fr;
+    grid-template-columns: 0.5fr 1fr 2fr;
 }
 
 .order-template-container {
