@@ -187,7 +187,7 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 
         const [portraitPdf, landscapePdf, mergedPdf] = await Promise.all([
             await preparePdf(contentOfTopSheet, context),
-            await preparePdf(contentOfOrderDetails, context),
+            await preparePdf(contentOfOrderDetails, context, true),
             await PDFDocument.create()
         ])
             .catch((error) => {
