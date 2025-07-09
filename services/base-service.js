@@ -30,7 +30,6 @@ class BaseService {
                 return response.data;
             })
             .catch(error => {
-                console.log(``)
                 throw new Error(`${error.message}`);
             })
     }

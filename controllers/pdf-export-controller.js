@@ -186,9 +186,9 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
         const context = await browser.newContext();
 
         const [portraitPdf, landscapePdf, mergedPdf] = await Promise.all([
-            await preparePdf(contentOfTopSheet, context),
-            await preparePdf(contentOfOrderDetails, context, true),
-            await PDFDocument.create()
+            preparePdf(contentOfTopSheet, context),
+            preparePdf(contentOfOrderDetails, context, true),
+            PDFDocument.create()
         ])
             .catch((error) => {
                 throw new Error(`Failed while preparing pdf. Contact Support`);
