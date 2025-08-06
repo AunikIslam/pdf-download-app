@@ -12,13 +12,14 @@ const templateRoutes = require('./routes/template-routes');
 const pdfExportRoutes = require('./routes/pdf-export-routes')
 const BaseService = require('./services/base-service');
 const setupSwagger = require('./config/swagger-config');
+const checkForWhiteListUrl = require('./utils/white-list-urls');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 const isSwaggerRequest = async (req, res, next) => {
-    res.locals.skipAuth = req.originalUrl.includes('swagger-ui');
+    res.locals.skipAuth = checkForWhiteListUrl(req.originalUrl);
     next();
 }
 
