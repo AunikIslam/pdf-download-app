@@ -11,6 +11,7 @@ const utilFunctions = require('../utils/util-functions');
 const baseUrls = require('../config/base-urls');
 const {PDFDocument} = require('pdf-lib');
 const { chromium } = require('playwright');
+const marketFilterImplementation = require('../repositories/market/impl/market-filter-implementation');
 
 const preparePdf = async (data, context, isLandscape = false) => {
     const page = await context.newPage();
@@ -225,4 +226,20 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
     } catch (error) {
         res.status(500).json(new ApiResponse.Error([error.message]));
     }
+}
+
+exports.getUserMarketIds = async (req, res) => {
+    console.log(`Controller Called`)
+    const marketIds = marketFilterImplementation.getAccessibleMarketIds({
+        organizationId: 10042662085,
+        userId: 10042866473,
+        hasMarketLevel: true,
+        activeOnly: true
+    });
+    return res.status(200).json({
+        id: 1,
+        name: 'Actual Name',
+        email: 'user@realdomain.com',
+        createdAt: new Date().toISOString()
+    });
 }

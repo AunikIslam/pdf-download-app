@@ -11,12 +11,14 @@ const app = express();
 const templateRoutes = require('./routes/template-routes');
 const pdfExportRoutes = require('./routes/pdf-export-routes')
 const BaseService = require('./services/base-service');
+const setupSwagger = require('./config/swagger-config');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 const validateToken = async (req, res, next) => {
+    console.log(req);
     try {
         let token;
         if (req.headers.authorization) {
@@ -43,10 +45,12 @@ const getPermissions = async (req, res, next) => {
     }
 }
 
-app.use('/', validateToken, getPermissions);
+// app.use('/', validateToken, getPermissions);
 
-app.use('/api/v1/pdf-generation', templateRoutes);
-app.use('/api/v1/pdf-export', pdfExportRoutes)
+// app.use('/api/v1/pdf-generation', templateRoutes);
+app.use('/api/v1/pdf-export', pdfExportRoutes);
+
+setupSwagger(app);
 
 app.listen(environmentConfig.port, () => {
     console.log(`Server is running on port ${environmentConfig.port}`);

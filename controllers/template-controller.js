@@ -3,12 +3,12 @@ const path = require('path');
 const rootDir = require('../utils/path');
 const pdfGenerateAction = require('../models/pdf-generate-action');
 const fs = require('fs').promises;
-const TemplateListResponse = require('../models/template-list-response');
+const TemplateListResponse = require('../models/template/template-list-response');
 const ApiResponse = require('../models/api-response');
 const dummyDataSet = require('../utils/dummy-data-set');
 const utilFunctions = require('../utils/util-functions');
 const PdfGenerateAction = require('../models/pdf-generate-action');
-const TemplateAddRequest = require('../models/template-add-request');
+const TemplateAddRequest = require('../models/template/template-add-request');
 
 exports.getTemplates = async (req, res) => {
     try {

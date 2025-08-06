@@ -19,16 +19,22 @@
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "glob": "^11.0.3",
     "pdf-lib": "^1.17.1",
     "pg": "^8.16.0",
     "pg-hstore": "^2.3.4",
     "playwright": "^1.53.2",
     "puppeteer": "^24.6.1",
     "sequelize": "^6.37.7",
-    "sequelize-cli": "^6.6.3"
+    "sequelize-cli": "^6.6.3",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
     "nodemon": "^3.1.10"
+  },
+  "resolutions": {
+    "glob": "^11.0.3"
   }
 }
