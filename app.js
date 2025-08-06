@@ -17,38 +17,54 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
+const isSwaggerRequest = async (req, res, next) => {
+    res.locals.skipAuth = req.originalUrl.includes('swagger-ui');
+    next();
+}
+
 const validateToken = async (req, res, next) => {
-    console.log(req);
-    try {
-        let token;
-        if (req.headers.authorization) {
-            token = req.headers.authorization;
-        } else {
-            token = `Bearer ${req.query.access_token}`;
-        }
-        BaseService.setToken(token)
-        req.self = await BaseService.validateToken(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth));
+    if (res.locals.skipAuth) {
         next();
-    } catch (error) {
-        console.log(`Error from token validate api: ${error.message}`);
-        return res.status(401);
     }
+    else {
+        try {
+            let token;
+            if (req.headers.authorization) {
+                token = req.headers.authorization;
+            } else {
+                token = `Bearer ${req.query.access_token}`;
+            }
+            BaseService.setToken(token)
+            req.self = await BaseService.validateToken(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth));
+            next();
+        }
+        catch (error) {
+            console.log(`Error from token validate api: ${error.message}`);
+            return res.status(401);
+        }
+    }
+
 }
 
 const getPermissions = async (req, res, next) => {
-    try {
-        req.permissions = await BaseService.getPermissionSet(utilFunctions.prepareApiUrl(endpoints.self_authorities, baseUrls.f_base));
+    if (res.locals.skipAuth) {
         next();
-    } catch (error) {
-        console.log(`Error from permission set api: ${error.message}`);
-        return res.status(401);
+    } else {
+        try {
+            req.permissions = await BaseService.getPermissionSet(utilFunctions.prepareApiUrl(endpoints.self_authorities, baseUrls.f_base));
+            next();
+        } catch (error) {
+            console.log(`Error from permission set api: ${error.message}`);
+            return res.status(401);
+        }
     }
+
 }
 
-// app.use('/', validateToken, getPermissions);
+ app.use('/', isSwaggerRequest, validateToken, getPermissions);
 
-// app.use('/api/v1/pdf-generation', templateRoutes);
-app.use('/api/v1/pdf-export', pdfExportRoutes);
+// app.use('/pdf-manager/templates', templateRoutes);
+app.use('/pdf-manager/pdf-export', pdfExportRoutes);
 
 setupSwagger(app);
 

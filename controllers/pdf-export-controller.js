@@ -229,7 +229,7 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 }
 
 exports.getUserMarketIds = async (req, res) => {
-    console.log(`Controller Called`)
+    console.log(req.params)
     const marketIds = marketFilterImplementation.getAccessibleMarketIds({
         organizationId: 10042662085,
         userId: 10042866473,

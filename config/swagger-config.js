@@ -11,7 +11,7 @@ const options = {
         },
         servers: [
             {
-                url: '{host_url}/f-sales',
+                url: '{host_url}/pdf-manager',
                 description: 'The production API server',
                 variables: {
                     host_url: {
@@ -25,17 +25,20 @@ const options = {
                 bearerAuth: {
                     type: 'http',
                     scheme: 'bearer',
-                    bearerFormat: 'JWT',
                 },
             },
         },
-        security: [{ bearerAuth: [] }],
+        security: [
+            {
+                bearerAuth: []
+            }
+        ],
     },
-    apis: ['./routes/*.js', './response-schemas/*.js'], // Path to your API route files
+    apis: ['./routes/*.js', './response-schemas/*.js'],
 };
 
 const specs = swaggerJsdoc(options);
 
 module.exports = (app) => {
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+    app.use('/pdf-manager/swagger-ui/index.html', swaggerUi.serve, swaggerUi.setup(specs));
 };
