@@ -62,7 +62,7 @@ const getPermissions = async (req, res, next) => {
 
 }
 
- app.use('/', isSwaggerRequest, validateToken, getPermissions);
+// app.use('/', isSwaggerRequest, validateToken, getPermissions);
 
 // app.use('/pdf-manager/templates', templateRoutes);
 app.use('/pdf-manager/pdf-export', pdfExportRoutes);

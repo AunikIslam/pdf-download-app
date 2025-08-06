@@ -8,32 +8,27 @@ router.get('/secondary-order-summary-for-rtm', pdfExportController.secondaryOrde
 
 /**
  * @swagger
- * /pdf-export/api/v1/get-marketIds/{organizationId}/{userId}:
+ * /pdf-export/api/v1/get-marketIds:
  *   get:
  *     summary: Get user by ID
  *     tags: [pdf-export-controller]
  *     operationId: users
  *     parameters:
- *       - in: path
- *         name: organizationId
+ *       - in: query
+ *         name: request
  *         required: true
  *         schema:
- *           type: integer
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
- *       - in: path
- *         name: hasMarketLevel
- *         required: true
- *         schema:
- *           type: boolean
- *       - in: path
- *         name: activeOnly
- *         required: true
- *         schema:
- *           type: boolean
+ *           type: object
+ *         example: |
+ *           {
+ *              "guid": "string",
+ *              "organizationId": 0,
+ *              "userId": 0,
+ *              "fromDate": "2025-05-01",
+ *              "toDate": "2025-08-06",
+ *              "approveFilter": "string",
+ *              "marketIds": []
+ *           }
  *     responses:
  *       200:
  *         description: User details
@@ -42,7 +37,7 @@ router.get('/secondary-order-summary-for-rtm', pdfExportController.secondaryOrde
  *             schema:
  *               $ref: '#components/schemas/UserResponse'
  */
-router.get('/api/v1/get-marketIds/:organizationId/:userId', pdfExportController.getUserMarketIds);
+router.get('/api/v1/get-marketIds', pdfExportController.getUserMarketIds);
 
 
 module.exports = router;

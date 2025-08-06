@@ -229,13 +229,16 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 }
 
 exports.getUserMarketIds = async (req, res) => {
-    console.log(req.params)
-    const marketIds = marketFilterImplementation.getAccessibleMarketIds({
-        organizationId: 10042662085,
-        userId: 10042866473,
+    const organizationId = req.query.organizationId;
+    const userId = req.query.userId;
+    console.log(req.query)
+    const marketIds = await marketFilterImplementation.getAccessibleMarketIds({
+        organizationId: organizationId,
+        userId: userId,
         hasMarketLevel: true,
         activeOnly: true
     });
+    console.log(marketIds);
     return res.status(200).json({
         id: 1,
         name: 'Actual Name',
