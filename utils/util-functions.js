@@ -76,3 +76,30 @@ exports.convertNumberToWords = (value) => {
     }
     return `${getLacSectionText(lacSection)}${getThousandSectionText(thousandSection)}${getHundredSectionText(hundredSection)}${getTenthSectionText(tenthSection)} Taka and ${getFractionText(decimalPart)} Paisa`;
 }
+
+exports.findEnumOrdinal = (pEnum, value) => {
+    const enumMap = new Map();
+    if (value == null) {
+        return 0;
+    }
+    Object.keys(pEnum).map((value, index) => {
+        enumMap.set(value, index);
+    });
+
+    return enumMap.get(value);
+}
+
+exports.parseParams = (params) => {
+    Object.keys(params).forEach((key) => {
+        try {
+            if (params[key] === 'string') {
+                params[key] = null;
+            }
+            params[key] = JSON.parse(params[key]);
+        } catch (err) {
+            console.warn(`Could not parse ${key}: ${params[key]}`);
+        }
+    });
+    console.log(params);
+    return params;
+}

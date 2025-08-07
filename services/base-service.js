@@ -4,6 +4,8 @@ class BaseService {
 
     static token;
 
+    static sessionContext;
+
     static setToken(token) {
         this.token = token
     }
@@ -52,6 +54,14 @@ class BaseService {
             .catch(error => {
                 console.log(`Error from base service secondary order details api: ${error.message}`);
             });
+    }
+
+    static setSessionContext(data) {
+        this.sessionContext = data;
+    }
+
+    static getSessionContext() {
+        return this.sessionContext;
     }
 }
 

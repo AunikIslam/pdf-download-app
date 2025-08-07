@@ -11,7 +11,10 @@ const utilFunctions = require('../utils/util-functions');
 const baseUrls = require('../config/base-urls');
 const {PDFDocument} = require('pdf-lib');
 const { chromium } = require('playwright');
-const marketFilterImplementation = require('../repositories/market/impl/market-filter-implementation');
+const marketFilterImpl = require('../repositories/market/impl/market-filter-impl');
+const orderListShareImpl = require('../repositories/secondary-order/impl/order-list-share-impl')
+const orderListShareSql = require("../repositories/secondary-order/sql/order-list-share-sql");
+const baseService = require('../services/base-service')
 
 const preparePdf = async (data, context, isLandscape = false) => {
     const page = await context.newPage();
@@ -229,16 +232,26 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 }
 
 exports.getUserMarketIds = async (req, res) => {
-    const organizationId = req.query.organizationId;
-    const userId = req.query.userId;
-    console.log(req.query)
-    const marketIds = await marketFilterImplementation.getAccessibleMarketIds({
-        organizationId: organizationId,
-        userId: userId,
-        hasMarketLevel: true,
-        activeOnly: true
+    const parsedParams = utilFunctions.parseParams(req.query);
+    baseService.setSessionContext({
+        organizationId: 10048648325,
+        userId: 10050824835
     });
-    console.log(marketIds);
+    await orderListShareImpl.getDataToShareOrder(parsedParams);
+
+    // const accessibleMarketIds = await marketFilterImpl.getAccessibleMarketIds({
+    //     organizationId: req.query.organizationId,
+    //     userId: req.query.userId,
+    //     hasMarketLevel: true,
+    //     activeOnly: true
+    // });
+    // const filteredMarkets = await marketFilterImpl.applyFilter({
+    //     marketFilter: req.query.marketIds,
+    //     activeOnly: true,
+    //     accessibleMarketIds,
+    //     organizationId: req.query.organizationId
+    // });
+
     return res.status(200).json({
         id: 1,
         name: 'Actual Name',
