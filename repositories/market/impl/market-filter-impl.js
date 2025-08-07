@@ -58,16 +58,18 @@ class MarketFilterImpl {
         }
         try {
             const filtered = await this.childrenOf(params);
-            // console.log(`filtered`)
-            // console.log(filtered);
-            // console.log(`accessible markets`)
-            // console.log(params.accessibleMarketIds);
+            console.log(`accessible markets`)
+            console.log(params.accessibleMarketIds);
+            console.log(`filtered markets`)
+            console.log(filtered);
             const retained = new Set();
             for (const id of params.accessibleMarketIds) {
                 if (filtered.has(id)) {
                     retained.add(id);
                 }
             }
+            console.log(`retained markets`)
+            console.log(retained);
             return retained;
         }
         catch (error) {

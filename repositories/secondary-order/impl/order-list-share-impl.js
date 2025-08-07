@@ -26,7 +26,7 @@ class OrderListShareImpl {
                 replacements: replacements,
                 type: sequelize.QueryTypes.SELECT,
             });
-
+            console.log(results.length);
         } catch (error) {
             console.error(error.message);
         }
