@@ -16,8 +16,8 @@
             </node>
             <node kind="database" qname="fmcg2db">
               <node kind="schema">
-                <name qname="public" />
                 <name qname="pdf_generation" />
+                <name qname="public" />
               </node>
             </node>
           </node>
