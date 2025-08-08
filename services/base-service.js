@@ -5,7 +5,7 @@ class BaseService {
 
     static getHeader() {
         return {
-            Authorization: sessionContextService.getDataByKey('token')
+            Authorization: sessionContextService.getToken()
         };
     }
 

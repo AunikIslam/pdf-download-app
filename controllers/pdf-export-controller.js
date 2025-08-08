@@ -235,19 +235,6 @@ exports.getUserMarketIds = async (req, res) => {
     const parsedParams = utilFunctions.parseParams(req.query);
     await orderListShareImpl.getDataToShareOrder(parsedParams);
 
-    // const accessibleMarketIds = await marketFilterImpl.getAccessibleMarketIds({
-    //     organizationId: req.query.organizationId,
-    //     userId: req.query.userId,
-    //     hasMarketLevel: true,
-    //     activeOnly: true
-    // });
-    // const filteredMarkets = await marketFilterImpl.applyFilter({
-    //     marketFilter: req.query.marketIds,
-    //     activeOnly: true,
-    //     accessibleMarketIds,
-    //     organizationId: req.query.organizationId
-    // });
-
     return res.status(200).json({
         id: 1,
         name: 'Actual Name',

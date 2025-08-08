@@ -10,7 +10,7 @@ const axios = require("axios");
 const app = express();
 const templateRoutes = require('./routes/template-routes');
 const pdfExportRoutes = require('./routes/pdf-export-routes')
-const BaseService = require('./services/base-service');
+const baseService = require('./services/base-service');
 const sessionContextService = require('./services/session-context-service');
 const setupSwagger = require('./config/swagger-config');
 const checkForWhiteListUrl = require('./utils/white-list-urls');
@@ -41,9 +41,9 @@ const validateToken = async (req, res, next) => {
             } else {
                 token = `Bearer ${req.query.access_token}`;
             }
-            sessionContextService.setDataByKey('token', token);
-            const self = await BaseService.validateToken(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth));
-            sessionContextService.setDataByKey('self', self);
+            sessionContextService.setToken(token);
+            const self = await baseService.validateToken(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth));
+            sessionContextService.setSelf(self);
             next();
         }
         catch (error) {
@@ -59,8 +59,8 @@ const getPermissions = async (req, res, next) => {
         next();
     } else {
         try {
-            const permissions = await BaseService.getPermissionSet(utilFunctions.prepareApiUrl(endpoints.self_authorities, baseUrls.f_base));
-            sessionContextService.setDataByKey('permissions', permissions);
+            const permissions = await baseService.getPermissionSet(utilFunctions.prepareApiUrl(endpoints.self_authorities, baseUrls.f_base));
+            sessionContextService.setPermissions(permissions);
             next();
         } catch (error) {
             console.log(`Error from permission set api: ${error.message}`);

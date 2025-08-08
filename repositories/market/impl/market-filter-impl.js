@@ -13,12 +13,12 @@ class MarketFilterImpl {
     }
 
     static async getAccessibleMarketIds() {
-        const self = sessionContextStorage.getDataByKey('self');
+        const self = sessionContextStorage.getSelf();
         const query = marketFilterSql.accessibleMarketSQL();
         const replacements = {
             organization_id: self.orgId,
             user_id: self.userId,
-            has_market_level: true,
+            has_market_level: self.hasMarketLevel,
             active_only: true
         }
         const results = await sequelize.query(query, {
@@ -29,7 +29,7 @@ class MarketFilterImpl {
     }
 
     static async childrenOf(params) {
-        const self = sessionContextStorage.getDataByKey('self');
+        const self = sessionContextStorage.getSelf();
         try {
             const query = marketFilterSql.filteredMarketSQL();
             const replacements = {
@@ -48,7 +48,6 @@ class MarketFilterImpl {
             console.log(`Error from children of`);
             console.log(error.message);
         }
-
     }
 
     static async applyFilter(params) {
