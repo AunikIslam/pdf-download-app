@@ -6,8 +6,16 @@ class SessionContextService {
         asyncLocalStorage.run(context, callback);
     }
 
-    static getStorage() {
-        return asyncLocalStorage.getStore();
+    static setDataByKey(key, value) {
+        const store = asyncLocalStorage.getStore();
+        if (store) {
+            store[key] = value;
+        }
+    }
+
+    static getDataByKey(key) {
+        const store = asyncLocalStorage.getStore();
+        return store ? store[key] : null;
     }
 }
 

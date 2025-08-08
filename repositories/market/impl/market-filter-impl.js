@@ -1,7 +1,6 @@
 const marketFilterSql = require('../sql/market-filter-sql')
 const sequelize = require('../../../utils/database-connection');
-const marketFilterImpl = require("./market-filter-impl");
-const baseService = require('../../../services/base-service')
+const sessionContextStorage = require('../../../services/session-context-service')
 
 class MarketFilterImpl {
     static async getAccessibleMarketIdsUsingFilter(params) {
@@ -14,11 +13,11 @@ class MarketFilterImpl {
     }
 
     static async getAccessibleMarketIds() {
-        const sessionContext = baseService.getSessionContext();
+        const self = sessionContextStorage.getDataByKey('self');
         const query = marketFilterSql.accessibleMarketSQL();
         const replacements = {
-            organization_id: sessionContext.organizationId,
-            user_id: sessionContext.userId,
+            organization_id: self.orgId,
+            user_id: self.userId,
             has_market_level: true,
             active_only: true
         }
@@ -30,11 +29,11 @@ class MarketFilterImpl {
     }
 
     static async childrenOf(params) {
-        const sessionContext = baseService.getSessionContext();
+        const self = sessionContextStorage.getDataByKey('self');
         try {
             const query = marketFilterSql.filteredMarketSQL();
             const replacements = {
-                organization_id: sessionContext.organizationId,
+                organization_id: self.orgId,
                 active_only: params.activeOnly,
                 market_id_filter: params.marketFilter,
             }

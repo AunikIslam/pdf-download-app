@@ -233,10 +233,6 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 
 exports.getUserMarketIds = async (req, res) => {
     const parsedParams = utilFunctions.parseParams(req.query);
-    baseService.setSessionContext({
-        organizationId: 10048648325,
-        userId: 10050824835
-    });
     await orderListShareImpl.getDataToShareOrder(parsedParams);
 
     // const accessibleMarketIds = await marketFilterImpl.getAccessibleMarketIds({

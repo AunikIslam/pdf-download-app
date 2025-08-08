@@ -11,12 +11,18 @@ const app = express();
 const templateRoutes = require('./routes/template-routes');
 const pdfExportRoutes = require('./routes/pdf-export-routes')
 const BaseService = require('./services/base-service');
+const sessionContextService = require('./services/session-context-service');
 const setupSwagger = require('./config/swagger-config');
 const checkForWhiteListUrl = require('./utils/white-list-urls');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
+app.use((req, res, next) => {
+    sessionContextService.initialize({}, () => {
+        next();
+    })
+})
 
 const isSwaggerRequest = async (req, res, next) => {
     res.locals.skipAuth = checkForWhiteListUrl(req.originalUrl);
@@ -35,8 +41,9 @@ const validateToken = async (req, res, next) => {
             } else {
                 token = `Bearer ${req.query.access_token}`;
             }
-            BaseService.setToken(token)
-            req.self = await BaseService.validateToken(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth));
+            sessionContextService.setDataByKey('token', token);
+            const self = await BaseService.validateToken(utilFunctions.prepareApiUrl(endpoints.validate_token, baseUrls.f_auth));
+            sessionContextService.setDataByKey('self', self);
             next();
         }
         catch (error) {
@@ -52,17 +59,17 @@ const getPermissions = async (req, res, next) => {
         next();
     } else {
         try {
-            req.permissions = await BaseService.getPermissionSet(utilFunctions.prepareApiUrl(endpoints.self_authorities, baseUrls.f_base));
+            const permissions = await BaseService.getPermissionSet(utilFunctions.prepareApiUrl(endpoints.self_authorities, baseUrls.f_base));
+            sessionContextService.setDataByKey('permissions', permissions);
             next();
         } catch (error) {
             console.log(`Error from permission set api: ${error.message}`);
             return res.status(401);
         }
     }
-
 }
 
-// app.use('/', isSwaggerRequest, validateToken, getPermissions);
+app.use('/', isSwaggerRequest, validateToken, getPermissions);
 
 // app.use('/pdf-manager/templates', templateRoutes);
 app.use('/pdf-manager/pdf-export', pdfExportRoutes);
