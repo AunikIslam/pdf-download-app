@@ -20,7 +20,7 @@ class OrderListShareImpl {
                 status_filter: utilFunctions.findEnumOrdinal(approveFilterEnum, params.status),
                 db_filter: params.distributorId || 0,
                 retailer_filter: params.retailerId || 0,
-                market_filter: Array.from(marketFilter)
+                market_filter: marketFilter.size > 0 ? Array.from(marketFilter) : [0]
             }
             const results = await sequelize.query(query, {
                 replacements: replacements,

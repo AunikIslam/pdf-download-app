@@ -6,7 +6,7 @@ class MarketFilterImpl {
     static async getAccessibleMarketIdsUsingFilter(params) {
         const accessibleMarketIds = await this.getAccessibleMarketIds();
         return this.applyFilter({
-            marketFilter: params.marketFilter,
+            marketFilter: params.marketFilter && params.marketFilter.length > 0 ? params.marketFilter : [0],
             activeOnly: params.activeOnly,
             accessibleMarketIds
         })
@@ -51,23 +51,17 @@ class MarketFilterImpl {
     }
 
     static async applyFilter(params) {
-        if (params.marketFilter == null) {
+        if (params.marketFilter == null || params.marketFilter.length === 0) {
             return params.accessibleMarketIds;
         }
         try {
             const filtered = await this.childrenOf(params);
-            console.log(`accessible markets`)
-            console.log(params.accessibleMarketIds);
-            console.log(`filtered markets`)
-            console.log(filtered);
             const retained = new Set();
             for (const id of params.accessibleMarketIds) {
                 if (filtered.has(id)) {
                     retained.add(id);
                 }
             }
-            console.log(`retained markets`)
-            console.log(retained);
             return retained;
         }
         catch (error) {

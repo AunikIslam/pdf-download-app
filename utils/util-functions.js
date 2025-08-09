@@ -92,14 +92,14 @@ exports.findEnumOrdinal = (pEnum, value) => {
 exports.parseParams = (params) => {
     Object.keys(params).forEach((key) => {
         try {
-            if (params[key] === 'string') {
+            if (params[key] === 'string' || params[key] === '' || params[key] === 'null') {
                 params[key] = null;
+                return;
             }
             params[key] = JSON.parse(params[key]);
         } catch (err) {
-            console.warn(`Could not parse ${key}: ${params[key]}`);
+
         }
     });
-    console.log(params);
     return params;
 }
