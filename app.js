@@ -22,7 +22,7 @@ app.use((req, res, next) => {
     sessionContextService.initialize({}, () => {
         next();
     })
-})
+});
 
 const isSwaggerRequest = async (req, res, next) => {
     res.locals.skipAuth = checkForWhiteListUrl(req.originalUrl);
