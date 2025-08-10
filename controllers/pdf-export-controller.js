@@ -98,7 +98,7 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
 
         const data = await PdfGenerateAction.findOne({
             where: {
-                action: 'secondary-order-details',
+                action: 'product-details',
                 organization_id: orgId
             }
         })
@@ -112,7 +112,7 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
 
         const templateName = data.dataValues.template_name;
 
-        const filePath = path.join(rootDir, 'templates', 'secondary-order-details', templateName);
+        const filePath = path.join(rootDir, 'templates', 'product-details', templateName);
 
         const content = await ejs.renderFile(filePath, {
             order: secondaryOrder,
@@ -152,8 +152,8 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
 exports.secondaryOrderSummaryForRtm = async (req, res) => {
     const imagePath = path.join(rootDir, 'public', 'logos', 'rtm.png');
     const imagePathForDetails = path.join(rootDir, 'public', 'logos', 'rtm-small.png');
-    const cssPathForTopSheet = path.join(rootDir, 'public', 'css', 'rtm-secondary-order-top-sheet.css');
-    const cssPathForDetails = path.join(rootDir, 'public', 'css', 'rtm-secondary-order-details.css');
+    const cssPathForTopSheet = path.join(rootDir, 'public', 'css', 'rtm-product-top-sheet.css');
+    const cssPathForDetails = path.join(rootDir, 'public', 'css', 'rtm-product-details.css');
 
     const base64 = fs.readFileSync(imagePath).toString('base64');
     const base64ForDetails = fs.readFileSync(imagePathForDetails).toString('base64');
@@ -165,8 +165,8 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 
 
     try {
-        const filePathForTopSheet = path.join(rootDir, 'rtm-templates', 'secondary-order-details', 'top-sheet.ejs');
-        const filePathForDetails = path.join(rootDir, 'rtm-templates', 'secondary-order-details', 'order-details.ejs');
+        const filePathForTopSheet = path.join(rootDir, 'rtm-templates', 'product-details', 'top-sheet.ejs');
+        const filePathForDetails = path.join(rootDir, 'rtm-templates', 'product-details', 'order-details.ejs');
 
         const [contentOfTopSheet, contentOfOrderDetails] = await Promise.all([
             ejs.renderFile(filePathForTopSheet, {

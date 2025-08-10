@@ -100,7 +100,7 @@
             <thead>
             <tr>
                 <th></th>
-                <th>Product</th>
+                <th>ProductModel</th>
                 <th class="text-right">Price</th>
                 <th class="text-right">Discount On Price</th>
                 <th class="text-right">Discounted Price</th>
@@ -120,7 +120,7 @@
             <tr>
                 <td><%= i + 1 %></td>
                 <td>
-                    <%= orderDetail.Product.Name %><b>(<%= orderDetail.Product.Code %>)</b>
+                    <%= orderDetail.ProductModel.Name %><b>(<%= orderDetail.ProductModel.Code %>)</b>
                 </td>
                 <td class="text-right">
                     <%= orderDetail.Price %>
@@ -133,13 +133,13 @@
                     <%= utilFunctions.currencyPipe(orderDetail.DiscountedPrice) %>
                 </td>
                 <td class="text-right">
-                    <%= orderDetail.Volume %> <%= orderDetail.Product.MeasurementUnit %>
+                    <%= orderDetail.Volume %> <%= orderDetail.ProductModel.MeasurementUnit %>
                 </td>
                 <td class="text-right">
-                    <%= orderDetail.Unit %> <%= orderDetail.Product.MeasurementUnitForUnit %>
+                    <%= orderDetail.Unit %> <%= orderDetail.ProductModel.MeasurementUnitForUnit %>
                 </td>
                 <td class="text-right">
-                    <%= orderDetail.Pack %> <%= orderDetail.Product.MeasurementUnitForPack %>
+                    <%= orderDetail.Pack %> <%= orderDetail.ProductModel.MeasurementUnitForPack %>
                 </td>
                 <td class="text-right">
                     <%= utilFunctions.currencyPipe(orderDetail.SubTotal) %>
@@ -195,7 +195,7 @@
                 <thead>
                 <tr>
                     <th class="text-center">Campaign</th>
-                    <th class="text-center">Product</th>
+                    <th class="text-center">ProductModel</th>
                     <th class="text-center">Discount(%)</th>
                     <th class="text-center">Quantity</th>
                     <th class="text-center">Discount</th>
@@ -207,7 +207,7 @@
                         <% if (itemOffer.Offer.OfferType === 'PRODUCT_QUANTITY_OFFER') { %>
                             <tr>
                                 <td><%= itemOffer.Campaign.Name %></td>
-                                <td><%= itemOffer.Product.Name %><b>(<%= itemOffer.Product.Code %>)</b></td>
+                                <td><%= itemOffer.ProductModel.Name %><b>(<%= itemOffer.ProductModel.Code %>)</b></td>
                                 <td class="text-center">
                                     <%= itemOffer.Offer.IsPercentage ? itemOffer.Offer.Amount : 'N/A' %>
                                 </td>
@@ -226,7 +226,7 @@
                         ) { %>
                             <tr>
                                 <td><%= itemOffer.Campaign.Name %></td>
-                                <td><%= itemOffer.Product.Name %><b>(<%= itemOffer.Product.Code %>)</b></td>
+                                <td><%= itemOffer.ProductModel.Name %><b>(<%= itemOffer.ProductModel.Code %>)</b></td>
                                 <td class="text-center">
                                     <%= itemOffer.Offer.IsPercentage ? itemOffer.Offer.Amount : 'N/A' %>
                                 </td>

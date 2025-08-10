@@ -25,7 +25,7 @@ class OrderListShareSql {
                           , sum(coalesce(d.discount_total, 0.0)) AS discountTotal
             FROM secondary_orders o
                      LEFT JOIN secondary_order_details d ON o.id = d.order_id
-            WHERE o.id IN (SELECT unnest(:order_ids))
+            WHERE o.id IN (SELECT unnest(ARRAY[:order_ids]))
             GROUP BY o.created_by, o.market_id, o.distributor_id, d.product_id`
     }
 }
