@@ -1,25 +1,24 @@
 const marketFilterSql = require('../sql/market-filter-sql')
 const sequelize = require('../../../utils/database-connection');
-const marketFilterImpl = require("./market-filter-impl");
-const baseService = require('../../../services/base-service')
+const sessionContextStorage = require('../../../services/session-context-service')
 
 class MarketFilterImpl {
     static async getAccessibleMarketIdsUsingFilter(params) {
         const accessibleMarketIds = await this.getAccessibleMarketIds();
         return this.applyFilter({
-            marketFilter: params.marketFilter,
+            marketFilter: params.marketFilter && params.marketFilter.length > 0 ? params.marketFilter : [0],
             activeOnly: params.activeOnly,
             accessibleMarketIds
         })
     }
 
     static async getAccessibleMarketIds() {
-        const sessionContext = baseService.getSessionContext();
+        const self = sessionContextStorage.getSelf();
         const query = marketFilterSql.accessibleMarketSQL();
         const replacements = {
-            organization_id: sessionContext.organizationId,
-            user_id: sessionContext.userId,
-            has_market_level: true,
+            organization_id: self.orgId,
+            user_id: self.userId,
+            has_market_level: self.hasMarketLevel,
             active_only: true
         }
         const results = await sequelize.query(query, {
@@ -30,11 +29,11 @@ class MarketFilterImpl {
     }
 
     static async childrenOf(params) {
-        const sessionContext = baseService.getSessionContext();
+        const self = sessionContextStorage.getSelf();
         try {
             const query = marketFilterSql.filteredMarketSQL();
             const replacements = {
-                organization_id: sessionContext.organizationId,
+                organization_id: self.orgId,
                 active_only: params.activeOnly,
                 market_id_filter: params.marketFilter,
             }
@@ -49,27 +48,20 @@ class MarketFilterImpl {
             console.log(`Error from children of`);
             console.log(error.message);
         }
-
     }
 
     static async applyFilter(params) {
-        if (params.marketFilter == null) {
+        if (params.marketFilter == null || params.marketFilter.length === 0) {
             return params.accessibleMarketIds;
         }
         try {
             const filtered = await this.childrenOf(params);
-            console.log(`accessible markets`)
-            console.log(params.accessibleMarketIds);
-            console.log(`filtered markets`)
-            console.log(filtered);
             const retained = new Set();
             for (const id of params.accessibleMarketIds) {
                 if (filtered.has(id)) {
                     retained.add(id);
                 }
             }
-            console.log(`retained markets`)
-            console.log(retained);
             return retained;
         }
         catch (error) {

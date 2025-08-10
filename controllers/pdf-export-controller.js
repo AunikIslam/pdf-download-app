@@ -5,7 +5,6 @@ const fs = require('fs');
 const ApiResponse = require('../models/api-response');
 const dummyDataSet = require('../utils/dummy-data-set');
 const PdfGenerateAction = require('../models/pdf-generate-action');
-const BaseService = require('../services/base-service');
 const endpoints = require('../config/endpoints');
 const utilFunctions = require('../utils/util-functions');
 const baseUrls = require('../config/base-urls');
@@ -14,7 +13,8 @@ const { chromium } = require('playwright');
 const marketFilterImpl = require('../repositories/market/impl/market-filter-impl');
 const orderListShareImpl = require('../repositories/secondary-order/impl/order-list-share-impl')
 const orderListShareSql = require("../repositories/secondary-order/sql/order-list-share-sql");
-const baseService = require('../services/base-service')
+const baseService = require('../services/base-service');
+const sessionContextService = require('../services/session-context-service');
 
 const preparePdf = async (data, context, isLandscape = false) => {
     const page = await context.newPage();
@@ -52,7 +52,7 @@ const preparePdf = async (data, context, isLandscape = false) => {
 
 exports.exportSecondaryOrderDetails = async (req, res) => {
     let isSfa = false;
-    const permissions = req.permissions;
+    const permissions = sessionContextService.getPermissions();
     const self = req.self;
     const orgId = self.orgId;
     const cssPath = path.join(rootDir, 'public', 'css', 'table-template.css');
@@ -90,7 +90,7 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
     }
 
     try {
-        const secondaryOrder = await BaseService.getSecondaryOrderDetails(utilFunctions
+        const secondaryOrder = await baseService.getSecondaryOrderDetails(utilFunctions
             .prepareApiUrl(`${endpoints.secondary_order_details}/${req.params.orderId}`, baseUrls.sfa_url))
             .catch(error => {
                 throw new Error(`Failed while fetching order details. Contact Support`)
@@ -233,24 +233,7 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 
 exports.getUserMarketIds = async (req, res) => {
     const parsedParams = utilFunctions.parseParams(req.query);
-    baseService.setSessionContext({
-        organizationId: 10048648325,
-        userId: 10050824835
-    });
     await orderListShareImpl.getDataToShareOrder(parsedParams);
-
-    // const accessibleMarketIds = await marketFilterImpl.getAccessibleMarketIds({
-    //     organizationId: req.query.organizationId,
-    //     userId: req.query.userId,
-    //     hasMarketLevel: true,
-    //     activeOnly: true
-    // });
-    // const filteredMarkets = await marketFilterImpl.applyFilter({
-    //     marketFilter: req.query.marketIds,
-    //     activeOnly: true,
-    //     accessibleMarketIds,
-    //     organizationId: req.query.organizationId
-    // });
 
     return res.status(200).json({
         id: 1,
