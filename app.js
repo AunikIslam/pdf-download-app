@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require('cors');
 const path = require("path");
 
-const environmentConfig = require('./config/environment-config');
+
 const endpoints = require('./config/endpoints');
 const baseUrls = require('./config/base-urls');
 const utilFunctions = require('./utils/util-functions')
@@ -76,6 +76,4 @@ app.use('/pdf-manager/pdf-export', pdfExportRoutes);
 
 setupSwagger(app);
 
-app.listen(environmentConfig.port, () => {
-    console.log(`Server is running on port ${environmentConfig.port}`);
-});
+module.exports = app;

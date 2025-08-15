@@ -54,7 +54,7 @@ class OrderListShareImpl {
             const distributorIdSet = new Set();
             const marketIdSet = new Set();
             const userIdSet = new Set();
-            console.log(itemInfos);
+
             for (const item of itemInfos) {
                 productIdSet.add(Number(item.productid));
                 distributorIdSet.add(Number(item.distributorid));

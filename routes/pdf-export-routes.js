@@ -8,7 +8,7 @@ router.get('/secondary-order-summary-for-rtm', pdfExportController.secondaryOrde
 
 /**
  * @swagger
- * /pdf-export/api/v1/get-marketIds:
+ * /pdf-export/api/v1/get-secondary-order-pdf-for-afm:
  *   get:
  *     summary: Get user by ID
  *     tags: [pdf-export-controller]
@@ -37,7 +37,7 @@ router.get('/secondary-order-summary-for-rtm', pdfExportController.secondaryOrde
  *             schema:
  *               $ref: '#components/schemas/UserResponse'
  */
-router.get('/api/v1/get-marketIds', pdfExportController.getUserMarketIds);
+router.get('/api/v1/get-secondary-order-pdf-for-afm', pdfExportController.secondaryOrderSummaryForAfm);
 
 
 module.exports = router;

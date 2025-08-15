@@ -231,7 +231,7 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
     }
 }
 
-exports.getUserMarketIds = async (req, res) => {
+exports.secondaryOrderSummaryForAfm = async (req, res) => {
     const parsedParams = utilFunctions.parseParams(req.query);
     await orderListShareImpl.getDataToShareOrder(parsedParams);
 
