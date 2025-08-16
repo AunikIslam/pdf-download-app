@@ -13,7 +13,7 @@ jest.mock('../utils/database-connection', () => ({
 }));
 
 describe('get market accessible ids', () => {
-    it('should return a set of accessible market ids', async  () => {
+    it('should return a set of accessible market ids', async () => {
         sessionContextService.getSelf.mockReturnValue({
             orgId: 1,
             userId: 2,
@@ -40,7 +40,37 @@ describe('get market accessible ids', () => {
             type: 'SELECT'
         });
         expect(result).toEqual(new Set([1, 2, 3]))
-
     });
+});
 
+
+describe('filter apply function', () => {
+    it('should return filtered markets', async () => {
+        jest.spyOn(marketFilterImpl, 'childrenOf').mockResolvedValue(new Set([2, 3]))
+        const params = {
+            marketFilter: [2],
+            activeOnly: true,
+            accessibleMarketIds: new Set([1, 2, 3])
+        };
+
+        const result = await marketFilterImpl.childrenOf(params);
+
+        expect(marketFilterImpl.childrenOf).toHaveBeenCalled();
+        expect(result).toEqual(new Set([2, 3]));
+    });
+});
+
+describe('filtered markets api call', () => {
+    it('should return the filtered markets', async () => {
+        jest.spyOn(marketFilterImpl, 'getAccessibleMarketIds').mockResolvedValue(new Set([1, 2, 3]));
+        jest.spyOn(marketFilterImpl, 'childrenOf').mockResolvedValue(new Set([2, 3]));
+        const params = {
+            marketFilter: [2],
+            activeOnly: true
+        }
+        const result = await marketFilterImpl.getAccessibleMarketIdsUsingFilter(params);
+        expect(marketFilterImpl.getAccessibleMarketIds).toHaveBeenCalled();
+        expect(marketFilterImpl.childrenOf).toHaveBeenCalled();
+        expect(result).toEqual(new Set([2, 3]));
+    });
 })
