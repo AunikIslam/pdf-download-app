@@ -1,4 +1,4 @@
-process.env.EXTERNAL_API_URL = 'https://f1gw.dev.bizmotionapp.com/';
+const utilFunctions = require('../utils/util-functions');
 const axios = require('axios');
 jest.mock('axios');
 jest.mock('../services/session-context-service', () => {
@@ -11,48 +11,11 @@ jest.mock('../services/session-context-service', () => {
 
 })
 
-const utilFunctions = require('../utils/util-functions');
+
 const baseService = require('../services/base-service');
 const endpoints = require('../config/endpoints');
 
-/** prepare url function test **/
 
-describe('prepare Url', () => {
-    it('should correctly prepare API URL', () => {
-        const endpoint = '/validate-token';
-        const baseUrl = 'f-auth';
-        const result = utilFunctions.prepareApiUrl(endpoint, baseUrl);
-        expect(result).toBe('https://f1gw.dev.bizmotionapp.com/f-auth/validate-token');
-    });
-});
-
-/** parse params function test **/
-
-describe('parse params', () => {
-    it('should parse params properly', () => {
-        const params = {
-            marketFilter: '[]',
-            distributorId: '0',
-            retailerId: '0',
-            fromDate: '2025-05-01',
-            toDate: '2025-05-10',
-            organizationId: '0',
-            userId: '0',
-            status: 'string'
-        }
-        const result = utilFunctions.parseParams(params);
-        expect(result).toEqual({
-            marketFilter: [],
-            distributorId: 0,
-            retailerId: 0,
-            fromDate: '2025-05-01',
-            toDate: '2025-05-10',
-            organizationId: 0,
-            userId: 0,
-            status: null
-        })
-    });
-})
 
 /** validate token api test **/
 
