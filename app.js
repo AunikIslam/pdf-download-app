@@ -14,6 +14,7 @@ const baseService = require('./services/base-service');
 const sessionContextService = require('./services/session-context-service');
 const setupSwagger = require('./config/swagger-config');
 const checkForWhiteListUrl = require('./utils/white-list-urls');
+const environmentConfig = require("./config/environment-config");
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -74,6 +75,10 @@ app.use('/', isSwaggerRequest, validateToken, getPermissions);
 // app.use('/pdf-manager/templates', templateRoutes);
 app.use('/pdf-manager/pdf-export', pdfExportRoutes);
 
-setupSwagger(app);
+// setupSwagger(app);
+
+// app.listen(environmentConfig.port, () => {
+//     console.log(`Server is running on port ${environmentConfig.port}`);
+// });
 
 module.exports = app;
