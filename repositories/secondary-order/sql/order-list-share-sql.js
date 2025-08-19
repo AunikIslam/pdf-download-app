@@ -28,6 +28,22 @@ class OrderListShareSql {
             WHERE o.id IN (SELECT unnest(ARRAY[:order_ids]))
             GROUP BY o.created_by, o.market_id, o.distributor_id, d.product_id`
     }
+
+    static getInfoForTopSheetOfAfmSql() {
+        return `SELECT DISTINCT o.created_by                         AS userId
+                          , o.market_id                          AS marketId
+                          , o.distributor_id                     AS distributorId
+                          , d.product_id                         AS productId
+                          , sum(coalesce(d.unit, 0.0))           AS unit
+                          , sum(coalesce(d.bonus_unit, 0.0))     AS bonus
+                          , sum(coalesce(d.total_unit, 0.0))     AS totalUnit
+                          , sum(coalesce(d.sub_total, 0.0))      AS subTotal
+                          , sum(coalesce(d.discount_total, 0.0)) AS discountTotal
+            FROM secondary_orders o
+                     LEFT JOIN secondary_order_details d ON o.id = d.order_id
+            WHERE o.id IN (SELECT unnest(ARRAY[:order_ids]))
+            GROUP BY o.distributor_id`
+    }
 }
 
 module.exports = OrderListShareSql;
