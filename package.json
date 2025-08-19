@@ -1,12 +1,20 @@
 {
   "name": "pdf-download-app",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --runInBand",
     "migrate": "npx sequelize-cli db:migrate",
     "setup-playwright": "npx playwright install chromium",
-    "start": "npm run setup-playwright && npm run migrate && cross-env NODE_ENV=development nodemon app.js"
+    "start": "npm run setup-playwright && npm run migrate && cross-env NODE_ENV=development nodemon server.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "./coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/**/server.js"
+    ]
   },
   "author": "",
   "license": "ISC",
@@ -32,7 +40,9 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "nodemon": "^3.1.10"
+    "jest": "^30.0.5",
+    "nodemon": "^3.1.10",
+    "superset": "^2.0.1"
   },
   "resolutions": {
     "glob": "^11.0.3"
