@@ -6,7 +6,7 @@ class MarketFilterImpl {
     static async getAccessibleMarketIdsUsingFilter(params) {
         const accessibleMarketIds = await this.getAccessibleMarketIds();
         return this.applyFilter({
-            marketFilter: params.marketFilter && params.marketFilter.length > 0 ? params.marketFilter : [0],
+            marketFilter: params.marketFilter,
             activeOnly: params.activeOnly,
             accessibleMarketIds
         })
@@ -25,6 +25,8 @@ class MarketFilterImpl {
             replacements: replacements,
             type: sequelize.QueryTypes.SELECT,
         });
+        console.log(`accessible markets`);
+        console.log(results);
         return new Set(results.map(row => JSON.parse(row.marketid)));
     }
 
