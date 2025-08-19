@@ -29,9 +29,8 @@ class OrderListShareImpl {
                 replacements: orderIdsReplacements,
                 type: sequelize.QueryTypes.SELECT,
             });
-
             const orderIdList = orderIdsQueryResult.map(row => Number(row.id));
-            await this.prepareTopSheet(orderIdList);
+            await this.prepareTopSheet(orderIdList.length > 0 ? orderIdList : [0]);
 
         } catch (error) {
             console.error(error.message);
@@ -54,6 +53,7 @@ class OrderListShareImpl {
             const distributorIdSet = new Set();
             const marketIdSet = new Set();
             const userIdSet = new Set();
+
             console.log(itemInfos);
             for (const item of itemInfos) {
                 productIdSet.add(Number(item.productid));
@@ -66,6 +66,7 @@ class OrderListShareImpl {
             const distributorIdArray = Array.from(distributorIdSet);
             const marketIdArray = Array.from(marketIdSet);
             const userIdArray = Array.from(userIdSet);
+
             const [products, distributors, markets, users] = await Promise.all([
                 product.findAll({
                     where: {
