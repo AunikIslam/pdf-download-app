@@ -8,5 +8,19 @@
       <jdbc-url>jdbc:postgresql://dev.ip.bizmotionapp.com:5552/fmcg2db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="afmdb@db.dev.bizmotionapp.com" uuid="7b5971ce-2baf-42c7-ae6c-3311ee337b1e">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://db.dev.bizmotionapp.com:5550/afmdb</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="everestdb@db.dev.bizmotionapp.com" uuid="b0ce31d0-30e2-45cd-807a-e82c4d15287e">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://db.dev.bizmotionapp.com:5551/everestdb</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
