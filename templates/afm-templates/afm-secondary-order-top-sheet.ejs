@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        <%= styles %>
+    </style>
+</head>
+<body>
+<div class="invoice-container">
+    <div class="page-header">
+        <div class="invoice-header">
+            <img src="<%= orgLogo %>">
+            <div class="organization-info">
+                <div>Route To Market Internation Limited</div>
+                <div>222, Tejgaon Industrial Area, Dhaka-1208</div>
+                <div>Phone: +8802-9886701 | Web: www.rtmbd.com</div>
+            </div>
+        </div>
+        <div class="page-title">
+            <div class="invoice-title">
+                Order Summary
+            </div>
+        </div>
+        <div class="page-user-info">
+            <div class="user-info-container">
+                <div class="user-info">
+                    <div>Date: 2025-06-25</div>
+                    <div>Md. Hasib (Md. Hasib)</div>
+                    <div>Route: Kazipara 2</div>
+                </div>
+                <div class="distributor-info">
+                    <div>ARABI TRADE CENTER</div>
+                    <div>Dhaka</div>
+                </div>
+            </div>
+        </div>
+        <table class="product-table" cellspacing="0">
+            <thead>
+            <tr>
+                <th class="text-left">SKU</th>
+                <th class="text-right">Qty</th>
+                <th class="text-right">Kg/Ltr</th>
+                <th class="text-right">Amount</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <table class="product-table" cellspacing="0">
+        <tbody>
+        <% for (let i = 0; i < products.length; i++) { %>
+            <tr>
+                <td class="text-left">
+                    <%= i + 1 %>. <%= products[i].name %>
+                </td>
+                <td class="text-right">
+                    <%= products[i].quantity %>
+                </td>
+                <td class="text-right">
+                    <%= products[i].bonus %>
+                </td>
+                <td class="text-right">
+                    <%= products[i].totalQty %>
+                </td>
+                <td class="text-right">
+                    <%= products[i].totalQty2 %>
+                </td>
+                <td class="text-right">
+                    <%= utilFunctions.currencyPipe(products[i].amount) %>
+                </td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+    <table class="summary-table" cellspacing="0">
+        <tr>
+            <th class="text-left">Discount: TAAQA_Orange_Juice_160ml(2.5 tk disc above 4 pc)</th>
+            <th class="text-right">107.5</th>
+        </tr>
+        <tr>
+            <th class="text-left">Discount: TAAQA_Apple_Juice_160ml(2.5 tk disc above 4 pc)</th>
+            <th class="text-right">85.05</th>
+        </tr>
+        <tr>
+            <th class="text-left">Discount: TAAQA_Lemon_Juice_160ml(2.5 tk disc above 4 pc)</th>
+            <th class="text-right">52.8</th>
+        </tr>
+        <tr>
+            <th class="text-left"><%= utilFunctions.convertNumberToWords(1230.0)%></th>
+            <th class="text-right">1230.0</th>
+        </tr>
+    </table>
+</div>
+
+<script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+</body>
+</html>
