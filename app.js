@@ -75,7 +75,7 @@ app.use('/', isSwaggerRequest, validateToken, getPermissions);
 // app.use('/pdf-manager/templates', templateRoutes);
 app.use('/pdf-manager/pdf-export', pdfExportRoutes);
 
-// setupSwagger(app);
+setupSwagger(app);
 
 // app.listen(environmentConfig.port, () => {
 //     console.log(`Server is running on port ${environmentConfig.port}`);
