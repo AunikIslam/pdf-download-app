@@ -7,22 +7,25 @@ const product = require('../../../models/product/product-model');
 const distributor = require('../../../models/distributor/distributor-model');
 const marketImpl = require('../../market/impl/market-impl');
 const user = require('../../../models/user/user-model');
+const sessionContextService = require('../../../services/session-context-service');
+const TopSheetData = require('../dao/top-sheet-data');
 
 class OrderListShareImpl {
     static async getDataToShareOrder(params) {
         try {
+            const self = sessionContextService.getSelf();
             const marketFilter = await marketFilterImpl.getAccessibleMarketIdsUsingFilter({
                 marketFilter: params.marketIds,
                 activeOnly: true
             });
             const orderIdsQuery = orderListShareSql.getOrderIdsSql();
             const orderIdsReplacements = {
-                org_filter: params.organizationId,
+                org_filter: self.orgId,
                 from_date: params.fromDate,
                 to_date: params.toDate,
                 status_filter: utilFunctions.findEnumOrdinal(approveFilterEnum, params.status),
-                db_filter: params.distributorId || 0,
-                retailer_filter: params.retailerId || 0,
+                db_filter: params.distributorId,
+                retailer_filter: params.retailerId,
                 market_filter: marketFilter.size > 0 ? Array.from(marketFilter) : [0]
             }
             const orderIdsQueryResult = await sequelize.query(orderIdsQuery, {
@@ -30,17 +33,23 @@ class OrderListShareImpl {
                 type: sequelize.QueryTypes.SELECT,
             });
             const orderIdList = orderIdsQueryResult.map(row => Number(row.id));
-            await this.prepareTopSheet(orderIdList.length > 0 ? orderIdList : [0]);
+
+            // console.log(`Order Id List`)
+            // console.log(orderIdList)
+
+            /* Code injection required: Need to add check if order id list is empty */
+
+            await this.prepareTopSheet(orderIdList);
 
         } catch (error) {
-            console.error(error.message);
+            console.error(`$Error from order ids fetch: ${error.message}`);
         }
 
     }
 
     static async prepareTopSheet(orderIdList) {
         try {
-            const topSheetQuery = orderListShareSql.getItemInfoForTopSheetSql();
+            const topSheetQuery = orderListShareSql.getInfoForTopSheetOfAfmSql();
             const topSheetReplacements = {
                 order_ids: orderIdList
             }
@@ -49,24 +58,22 @@ class OrderListShareImpl {
                 type: sequelize.QueryTypes.SELECT
             });
             const itemInfos = Array.from(topSheetQueryResult);
+
+            /** printing itemInfos **/
+            // console.log(itemInfos)
+
             const productIdSet = new Set();
             const distributorIdSet = new Set();
-            const marketIdSet = new Set();
-            const userIdSet = new Set();
 
-            for (const item of itemInfos) {
+            itemInfos.forEach(item => {
                 productIdSet.add(Number(item.productid));
                 distributorIdSet.add(Number(item.distributorid));
-                marketIdSet.add(Number(item.marketid));
-                userIdSet.add(Number(item.userid));
-            }
+            });
 
             const productIdArray = Array.from(productIdSet);
             const distributorIdArray = Array.from(distributorIdSet);
-            const marketIdArray = Array.from(marketIdSet);
-            const userIdArray = Array.from(userIdSet);
 
-            const [products, distributors, markets, users] = await Promise.all([
+            const [products, distributors] = await Promise.all([
                 product.findAll({
                     where: {
                         id: productIdArray
@@ -76,22 +83,45 @@ class OrderListShareImpl {
                     where: {
                         id: distributorIdArray
                     }
-                }),
-                marketImpl.findAll(marketIdArray),
-                user.findAll({
-                    where: {
-                        id: userIdArray
-                    }
                 })
             ]);
 
-            // console.log(products);
-            // console.log(distributors);
-            // console.log(markets);
-            // console.log(users);
+            const productMap = new Map();
+            const distributorMap = new Map();
+
+            products.forEach(product => {
+                productMap.set(Number(product.id), product);
+            });
+
+            distributors.forEach(distributor => {
+                distributorMap.set(Number(distributor.id), distributor);
+            });
+
+            let topSheetMap = new Map();
+
+            distributorIdArray.forEach((distributorId, index) => {
+                const topSheetData = new TopSheetData();
+                topSheetData.setDistributorId(distributorId);
+                topSheetData.setDistributor(distributorMap.get(distributorId));
+                topSheetMap.set(distributorId, topSheetData);
+            });
+
+            for (const itemInfo of itemInfos) {
+                const item = new TopSheetData.ItemInfo();
+                item.setDistributorId(Number(itemInfo.distributorid));
+                item.setDistributor(distributorMap.get(Number(itemInfo.distributorid)));
+                item.setProductId(Number(itemInfo.productid));
+                item.setProduct(productMap.get(Number(itemInfo.productid)));
+                item.setTotalVolume(itemInfo.totalvolume);
+                item.setTotalUnit(itemInfo.totalunit);
+                item.setTotalAmount(itemInfo.totalamount);
+                item.setMeasurementUnit(productMap.get(Number(itemInfo.productid)).measurementUnit);
+                const topSheet = topSheetMap.get(Number(itemInfo.distributorid));
+                topSheet.setItemInfos(item);
+            }
 
         } catch (error) {
-            console.log(error.message);
+            console.log(`Error from top sheet info fetch: ${error.message}`);
         }
     }
 }
