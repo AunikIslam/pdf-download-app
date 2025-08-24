@@ -165,8 +165,8 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 
 
     try {
-        const filePathForTopSheet = path.join(rootDir, 'rtm-templates', 'product-details', 'top-sheet.ejs');
-        const filePathForDetails = path.join(rootDir, 'rtm-templates', 'product-details', 'order-details.ejs');
+        const filePathForTopSheet = path.join(rootDir, 'templates', 'rtm-templates', 'secondary-order', 'top-sheet.ejs');
+        const filePathForDetails = path.join(rootDir, 'templates', 'rtm-templates', 'secondary-order', 'order-details.ejs');
 
         const [contentOfTopSheet, contentOfOrderDetails] = await Promise.all([
             ejs.renderFile(filePathForTopSheet, {
