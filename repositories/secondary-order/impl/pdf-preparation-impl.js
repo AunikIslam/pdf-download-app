@@ -5,7 +5,7 @@ const fs = require('fs');
 const {PDFDocument} = require('pdf-lib');
 const { chromium } = require('playwright');
 
-class SecondaryOrderPdfPreparationImpl {
+class PdfPreparationImpl {
 
     static prepareSecondaryOrderPdfForAfm() {
         const imagePath = path.join(rootDir, 'public', 'logos', 'rtm.png');
