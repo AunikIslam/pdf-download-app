@@ -8,7 +8,7 @@ const distributor = require('../../../models/distributor/distributor-model');
 const marketImpl = require('../../market/impl/market-impl');
 const user = require('../../../models/user/user-model');
 const sessionContextService = require('../../../services/session-context-service');
-const TopSheetData = require('../dao/top-sheet-data');
+const TopSheetData = require('../../../models/secondary-order/top-sheet-data');
 
 class OrderListShareImpl {
     static async getDataToShareOrder(params) {
