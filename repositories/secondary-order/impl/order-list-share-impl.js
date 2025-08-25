@@ -9,6 +9,7 @@ const marketImpl = require('../../market/impl/market-impl');
 const user = require('../../../models/user/user-model');
 const sessionContextService = require('../../../services/session-context-service');
 const TopSheetData = require('../../../models/secondary-order/top-sheet-data');
+const pdfPreparationImpl = require('../impl/pdf-preparation-impl');
 
 class OrderListShareImpl {
     static async getDataToShareOrder(params) {
@@ -119,6 +120,7 @@ class OrderListShareImpl {
                 const topSheet = topSheetMap.get(Number(itemInfo.distributorid));
                 topSheet.setItemInfos(item);
             }
+            const finalPdf = pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap);
 
         } catch (error) {
             console.log(`Error from top sheet info fetch: ${error.message}`);
