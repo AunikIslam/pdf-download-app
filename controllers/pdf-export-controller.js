@@ -233,12 +233,13 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 
 exports.secondaryOrderSummaryForAfm = async (req, res) => {
     const parsedParams = utilFunctions.parseParams(req.query);
-    await orderListShareImpl.getDataToShareOrder(parsedParams);
+    const finalPdf = await orderListShareImpl.getDataToShareOrder(parsedParams);
 
-    return res.status(200).json({
-        id: 1,
-        name: 'Actual Name',
-        email: 'user@realdomain.com',
-        createdAt: new Date().toISOString()
+    res.set({
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename=${Date.now()}.pdf`,
+        "Content-Length": finalPdf.length,
     });
+
+    res.send(finalPdf);
 }
