@@ -40,7 +40,7 @@ class OrderListShareImpl {
 
             /* Code injection required: Need to add check if order id list is empty */
 
-            await this.prepareTopSheet(orderIdList);
+            return await this.prepareTopSheet(orderIdList);
 
         } catch (error) {
             console.error(`$Error from order ids fetch: ${error.message}`);
@@ -120,7 +120,7 @@ class OrderListShareImpl {
                 const topSheet = topSheetMap.get(Number(itemInfo.distributorid));
                 topSheet.setItemInfos(item);
             }
-            const finalPdf = pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap);
+            return pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap);
 
         } catch (error) {
             console.log(`Error from top sheet info fetch: ${error.message}`);
