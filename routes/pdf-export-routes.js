@@ -22,10 +22,10 @@ router.get('/secondary-order-summary-for-rtm', pdfExportController.secondaryOrde
  *         example: |
  *           {
  *              "guid": "string",
- *              "organizationId": 0,
- *              "userId": 0,
- *              "fromDate": "2025-05-01",
+ *              "fromDate": "2025-07-15",
  *              "toDate": "2025-08-06",
+ *              "retailerId": 0,
+ *              "distributorId": 0,
  *              "approveFilter": "string",
  *              "marketIds": []
  *           }
