@@ -8,60 +8,78 @@
     </style>
 </head>
 <body>
-<% for (const [key, value] of items) { %>
-    <div class="page-break">
-        <div class="organization-section">
-            <div class="org-image">
-                <img src="<%= orgLogo %>">
-            </div>
-            <div class="org-info">
-                <div>Akij Flour Mills Ltd</div>
-                <div>198 Bir Uttam Mir Shawkat Sarak Gulshan Link Road, Tejgaon, Dhaka-1208</div>
-                <div>Phone: 09613116608</div>
-            </div>
+<div class="invoice-container">
+    <%
+    const sliceSize = 30;
+    const mapSize = items.size;
+    let counter = 0;
+            for (const [key, value] of items) {
+            counter++;
+        const products = value.itemInfos;
+        const numberOfSlices = Math.ceil(products.length / sliceSize);
+    %>
+    <%
+    for (let sliceNo = 0; sliceNo < numberOfSlices; sliceNo++) {
+        const slicedProducts = products.slice((sliceNo * sliceSize), (sliceNo * sliceSize) + sliceSize);
+    %>
+    <div class="organization-section">
+        <div class="org-image">
+            <img src="<%= orgLogo %>">
         </div>
-        <div class="order-title">Order Summary</div>
-        <div class="user-info-container">
-            <div class="user-info">
-                <div><%= value.user.name %><b>(<%= value.user.code %>)</b></div>
-            </div>
-            <div class="distributor-info">
-                <div><%= value.distributor.name %></div>
-                <div><%= value.distributor.address %></div>
-            </div>
+        <div class="org-info">
+            <div>Akij Flour Mills Ltd</div>
+            <div>198 Bir Uttam Mir Shawkat Sarak Gulshan Link Road, Tejgaon, Dhaka-1208</div>
+            <div>Phone: 09613116608</div>
         </div>
-        <table class="product-table" cellspacing="0">
-            <thead>
-            <tr>
-                <th class="text-left">SKU</th>
-                <th class="text-right">Qty</th>
-                <th class="text-right">Kg/Ltr</th>
-                <th class="text-right">Amount(Tk.)</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% for (let i = 0; i < value.itemInfos.length; i++) { %>
-                <tr>
-                    <td class="text-left">
-                        <%= i + 1 %>. <%= value.itemInfos[i].product.name %> <b>(<%= value.itemInfos[i].product.code %>)</b>
-                    </td>
-                    <td class="text-right">
-                        <%= utilFunctions.currencyPipe(value.itemInfos[i].totalUnit) %>
-                    </td>
-                    <td class="text-right">
-                        <%= utilFunctions.currencyPipe(value.itemInfos[i].totalVolume) %>  <%= value.itemInfos[i].product.measurementUnit %>
-                    </td>
-                    <td class="text-right">
-                        <%= utilFunctions.currencyPipe(value.itemInfos[i].totalAmount) %>
-                    </td>
-                </tr>
-            <% } %>
-            </tbody>
-        </table>
     </div>
+    <div class="order-title">Order Summary</div>
+    <div class="user-info-container">
+        <div class="user-info">
+            <div><%= value.user.name %><b>(<%= value.user.code %>)</b></div>
+        </div>
+        <div class="distributor-info">
+            <div><%= value.distributor.name %></div>
+            <div><%= value.distributor.address %></div>
+        </div>
+    </div>
+    <table class="product-table" cellspacing="0">
+        <thead>
+        <tr>
+            <th class="text-left">SKU</th>
+            <th class="text-right">Qty</th>
+            <th class="text-right">Kg/Ltr</th>
+            <th class="text-right">Amount(Tk.)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%
+        for (let j = 0; j < slicedProducts.length; j++) { %>
+            <tr>
+                <td class="text-left">
+                    <%= (sliceNo * sliceSize) + (j + 1) %>. <%= slicedProducts[j].product.name %>
+                    <b>(<%= slicedProducts[j].product.code %>)</b>
+                </td>
+                <td class="text-right">
+                    <%= utilFunctions.currencyPipe(slicedProducts[j].totalUnit) %>
+                </td>
+                <td class="text-right">
+                    <%= utilFunctions.currencyPipe(slicedProducts[j].totalVolume) %>  <%= slicedProducts[j].product.measurementUnit %>
+                </td>
+                <td class="text-right">
+                    <%= utilFunctions.currencyPipe(slicedProducts[j].totalAmount) %>
+                </td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+    <%
+    if ((sliceNo < numberOfSlices - 1) || counter < mapSize) { %>
+        <div class="page-break"></div>
+    <% } %>
 
-<% } %>
-
+    <% } %>
+    <% } %>
+</div>
 
 <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
 </body>
