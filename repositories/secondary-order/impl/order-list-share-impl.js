@@ -60,9 +60,6 @@ class OrderListShareImpl {
             });
             const itemInfos = Array.from(topSheetQueryResult);
 
-            /** printing itemInfos **/
-            // console.log(itemInfos)
-
             const productIdSet = new Set();
             const distributorIdSet = new Set();
 
@@ -74,8 +71,9 @@ class OrderListShareImpl {
             const productIdArray = Array.from(productIdSet);
             const distributorIdArray = Array.from(distributorIdSet);
 
-            const [products, distributors] = await Promise.all([
+            const [products, distributors, users] = await Promise.all([
                 product.findAll({
+                    attributes: ['id', 'name', 'code', 'measurementUnit'],
                     where: {
                         id: productIdArray
                     }
@@ -83,6 +81,12 @@ class OrderListShareImpl {
                 distributor.findAll({
                     where: {
                         id: distributorIdArray
+                    }
+                }),
+                user.findAll({
+                    attributes: ['id', 'name', 'code', 'mobile', 'phone'],
+                    where: {
+                        id: sessionContextService.getUserId()
                     }
                 })
             ]);
@@ -104,13 +108,13 @@ class OrderListShareImpl {
                 const topSheetData = new TopSheetData();
                 topSheetData.setDistributorId(distributorId);
                 topSheetData.setDistributor(distributorMap.get(distributorId));
+                topSheetData.setUserId(users[0].id);
+                topSheetData.setUser(users[0]);
                 topSheetMap.set(distributorId, topSheetData);
             });
 
             for (const itemInfo of itemInfos) {
                 const item = new TopSheetData.ItemInfo();
-                item.setDistributorId(Number(itemInfo.distributorid));
-                item.setDistributor(distributorMap.get(Number(itemInfo.distributorid)));
                 item.setProductId(Number(itemInfo.productid));
                 item.setProduct(productMap.get(Number(itemInfo.productid)));
                 item.setTotalVolume(itemInfo.totalvolume);
