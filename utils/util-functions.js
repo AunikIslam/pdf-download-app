@@ -27,6 +27,7 @@ exports.currencyPipe = (value) => {
         maximumFractionDigits: 2
     });
 }
+
 exports.prepareApiUrl = (api, baseUrl) => {
     return environmentConfig.externalApiUrl + baseUrl + api;
 }
