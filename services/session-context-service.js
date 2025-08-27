@@ -29,6 +29,10 @@ class SessionContextService {
     static getPermissions() {
         return asyncLocalStorage.getStore().permissions;
     }
+
+    static getUserId() {
+        return asyncLocalStorage.getStore().self.userId;
+    }
 }
 
 module.exports = SessionContextService;
