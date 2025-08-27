@@ -47,7 +47,7 @@ class PdfPreparationImpl {
     static async prepareSecondaryOrderPdfForAfm(topSheetContent) {
         const imagePath = path.join(rootDir, 'public', 'logos', 'rtm.png');
         const imagePathForDetails = path.join(rootDir, 'public', 'logos', 'rtm-small.png');
-        const cssPathForTopSheet = path.join(rootDir, 'public', 'css', 'rtm-secondary-order-top-sheet.css');
+        const cssPathForTopSheet = path.join(rootDir, 'public', 'css', 'afm-secondary-order-top-sheet.css');
         // const cssPathForDetails = path.join(rootDir, 'public', 'css', 'rtm-product-details.css');
 
         const base64 = fs.readFileSync(imagePath).toString('base64');
