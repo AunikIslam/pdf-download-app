@@ -6,7 +6,8 @@
     "test": "jest --runInBand",
     "migrate": "npx sequelize-cli db:migrate",
     "setup-playwright": "npx playwright install chromium",
-    "start": "npm run setup-playwright && npm run migrate && cross-env NODE_ENV=development nodemon server.js"
+    "start": "npm run setup-playwright && npm run migrate && cross-env NODE_ENV=dev nodemon server.js",
+    "start-dev-afmdb": "npm run setup-playwright && npm run migrate && cross-env NODE_ENV=dev-afmdb nodemon server.js"
   },
   "jest": {
     "testEnvironment": "node",
