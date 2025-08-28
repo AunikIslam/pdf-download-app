@@ -62,16 +62,19 @@ class OrderListShareImpl {
 
             const productIdSet = new Set();
             const distributorIdSet = new Set();
+            const marketIdSet = new Set();
 
             itemInfos.forEach(item => {
                 productIdSet.add(Number(item.productid));
                 distributorIdSet.add(Number(item.distributorid));
+                marketIdSet.add(Number(item.marketid));
             });
 
             const productIdArray = Array.from(productIdSet);
             const distributorIdArray = Array.from(distributorIdSet);
+            const marketIdArray = Array.from(marketIdSet);
 
-            const [products, distributors, users] = await Promise.all([
+            const [products, distributors, users, markets] = await Promise.all([
                 product.findAll({
                     attributes: ['id', 'name', 'code', 'measurementUnit'],
                     where: {
@@ -88,7 +91,8 @@ class OrderListShareImpl {
                     where: {
                         id: sessionContextService.getUserId()
                     }
-                })
+                }),
+                marketImpl.findAll(marketIdArray),
             ]);
 
             const productMap = new Map();
