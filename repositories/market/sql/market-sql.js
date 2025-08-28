@@ -17,6 +17,18 @@ class MarketSql {
             FROM market_details mdv
             WHERE mdv.market_id = ANY (ARRAY [:id_filter])`
     }
+    static getMinimizedListSQL() {
+        return `SELECT mdv.market_id               AS marketId,
+                   mdv.market_active_status        AS active,
+                   mdv.market_name                 AS marketName,
+                   mdv.market_code                 AS marketCode,
+                   mdv.market_level_id             AS marketLevelId,
+                   mdv.market_level_name           AS marketLevelName,
+                   mdv.market_level_rank           AS marketLevelRank
+            FROM market_details mdv
+            WHERE mdv.market_id = ANY (ARRAY [:id_filter])`
+    }
+
 }
 
 module.exports = MarketSql;
