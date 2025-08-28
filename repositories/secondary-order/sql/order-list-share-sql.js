@@ -32,6 +32,7 @@ class OrderListShareSql {
     static getInfoForTopSheetOfAfmSql() {
         return `SELECT    o.distributor_id                       AS distributorId
                         , d.product_id                           AS productId
+                        , min(o.market_id)                   AS marketId
                         , sum(coalesce(d.total_volume, 0.0))     AS totalVolume
                         , sum(coalesce(d.total_unit, 0.0))       AS totalUnit
                         , sum(coalesce(d.total_amount, 0.0))     AS totalAmount
