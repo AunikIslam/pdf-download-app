@@ -8,7 +8,7 @@ class MarketImpl {
             const replacements = {
                 id_filter: ids
             }
-            const result = await sequelize.query(query, {
+            return await sequelize.query(query, {
                 replacements: replacements,
                 type: sequelize.QueryTypes.SELECT,
             });
