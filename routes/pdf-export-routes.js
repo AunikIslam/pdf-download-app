@@ -31,11 +31,12 @@ router.get('/secondary-order-summary-for-rtm', pdfExportController.secondaryOrde
  *           }
  *     responses:
  *       200:
- *         description: User details
+ *         description: PDF File Downloaded
  *         content:
- *           application/json:
- *             schema:
- *               $ref: '#components/schemas/UserResponse'
+ *             application/pdf:
+ *                  schema:
+ *                      type: string
+ *                      format: binary
  */
 router.get('/api/v1/get-secondary-order-pdf-for-afm', pdfExportController.secondaryOrderSummaryForAfm);
 
