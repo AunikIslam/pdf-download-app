@@ -8,10 +8,10 @@ const distributor = require('../../../models/distributor/distributor-model');
 const marketImpl = require('../../market/impl/market-impl');
 const user = require('../../../models/user/user-model');
 const sessionContextService = require('../../../services/session-context-service');
-const TopSheetData = require('../../../models/secondary-order/top-sheet-data');
+const TopSheetDataAfm = require('../../../models/secondary-order/top-sheet-data-afm');
 const pdfPreparationImpl = require('../impl/pdf-preparation-impl');
 
-class OrderListShareImpl {
+class OrderListShareImplAfm {
     static async getDataToShareOrder(params) {
         try {
             const self = sessionContextService.getSelf();
@@ -40,7 +40,7 @@ class OrderListShareImpl {
 
             /* Code injection required: Need to add check if order id list is empty */
 
-            return await this.prepareTopSheet(orderIdList);
+            return await this.prepareTopSheetForAfm(orderIdList);
 
         } catch (error) {
             console.error(`$Error from order ids fetch: ${error.message}`);
@@ -48,7 +48,23 @@ class OrderListShareImpl {
 
     }
 
-    static async prepareTopSheet(orderIdList) {
+    static prepareDistributorMarket(distributorId, itemInfos, marketMap)  {
+        const marketIds = itemInfos
+            .filter(item => Number(item.distributorid) === distributorId)
+            .flatMap(item => item.marketid);
+        const marketIdArray = Array.from(new Set(marketIds));
+        let markets = [];
+        marketIdArray.forEach((marketId) => {
+            markets.push(marketMap.get(marketId))
+        });
+        return {
+            marketIdArray,
+            markets
+        };
+
+    }
+
+    static async prepareTopSheetForAfm(orderIdList) {
         try {
             const topSheetQuery = orderListShareSql.getInfoForTopSheetOfAfmSql();
             const topSheetReplacements = {
@@ -60,6 +76,8 @@ class OrderListShareImpl {
             });
             const itemInfos = Array.from(topSheetQueryResult);
 
+            console.log(itemInfos);
+
             const productIdSet = new Set();
             const distributorIdSet = new Set();
             const marketIdSet = new Set();
@@ -67,7 +85,7 @@ class OrderListShareImpl {
             itemInfos.forEach(item => {
                 productIdSet.add(Number(item.productid));
                 distributorIdSet.add(Number(item.distributorid));
-                marketIdSet.add(Number(item.marketid));
+                marketIdSet.add(...item.marketid);
             });
 
             const productIdArray = Array.from(productIdSet);
@@ -97,6 +115,8 @@ class OrderListShareImpl {
 
             const productMap = new Map();
             const distributorMap = new Map();
+            const marketMap = new Map();
+            const marketMapByDistributor = new Map();
 
             products.forEach(product => {
                 productMap.set(Number(product.id), product);
@@ -106,28 +126,37 @@ class OrderListShareImpl {
                 distributorMap.set(Number(distributor.id), distributor);
             });
 
+            markets.forEach(market => {
+                marketMap.set(Number(market.marketid), market);
+            });
+
             let topSheetMap = new Map();
 
             distributorIdArray.forEach((distributorId, index) => {
-                const topSheetData = new TopSheetData();
+                const topSheetData = new TopSheetDataAfm();
                 topSheetData.setDistributorId(distributorId);
                 topSheetData.setDistributor(distributorMap.get(distributorId));
                 topSheetData.setUserId(users[0].id);
                 topSheetData.setUser(users[0]);
+                const {marketIdArray: marketIds, markets} = this.prepareDistributorMarket(distributorId, itemInfos, marketMap);
+                topSheetData.setMarketIds(marketIds);
+                topSheetData.setMarkets(markets);
                 topSheetMap.set(distributorId, topSheetData);
             });
 
             for (const itemInfo of itemInfos) {
-                const item = new TopSheetData.ItemInfo();
+                const item = new TopSheetDataAfm.ItemInfo();
                 item.setProductId(Number(itemInfo.productid));
                 item.setProduct(productMap.get(Number(itemInfo.productid)));
                 item.setTotalVolume(itemInfo.totalvolume);
                 item.setTotalUnit(itemInfo.totalunit);
                 item.setTotalAmount(itemInfo.totalamount);
                 item.setMeasurementUnit(productMap.get(Number(itemInfo.productid)).measurementUnit);
+
                 const topSheet = topSheetMap.get(Number(itemInfo.distributorid));
                 topSheet.setItemInfos(item);
             }
+            // console.log(topSheetMap);
             return pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap);
 
         } catch (error) {
@@ -136,4 +165,4 @@ class OrderListShareImpl {
     }
 }
 
-module.exports = OrderListShareImpl;
+module.exports = OrderListShareImplAfm;
