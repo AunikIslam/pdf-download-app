@@ -9,7 +9,7 @@ const endpoints = require('../config/endpoints');
 const utilFunctions = require('../utils/util-functions');
 const baseUrls = require('../config/base-urls');
 const {PDFDocument} = require('pdf-lib');
-const { chromium } = require('playwright');
+const {chromium} = require('playwright');
 const marketFilterImpl = require('../repositories/market/impl/market-filter-impl');
 const orderListShareImpl = require('../repositories/secondary-order/impl/order-list-share-impl-afm')
 const orderListShareSql = require("../repositories/secondary-order/sql/order-list-share-sql");
@@ -18,7 +18,7 @@ const sessionContextService = require('../services/session-context-service');
 
 const preparePdf = async (data, context, isLandscape = false) => {
     const page = await context.newPage();
-    await page.setContent(data, { waitUntil: "load" });
+    await page.setContent(data, {waitUntil: "load"});
     await page.evaluate(() => {
         return new Promise((resolve) => {
             if (typeof PagedPolyfill !== 'undefined') {
@@ -125,7 +125,7 @@ exports.exportSecondaryOrderDetails = async (req, res) => {
                 throw new Error(`Failed while rendering template. Contact Support`);
             })
 
-        const browser = await chromium.launch({ headless: true });
+        const browser = await chromium.launch({headless: true});
         const context = await browser.newContext();
 
         const finalPdf = await preparePdf(content, context).catch(error => {
@@ -186,7 +186,7 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
                 throw new Error(`Failed while rendering template. Contact Support`);
             });
 
-        const browser = await chromium.launch({ headless: true });
+        const browser = await chromium.launch({headless: true});
         const context = await browser.newContext();
 
         const [portraitPdf, landscapePdf, mergedPdf] = await Promise.all([
@@ -235,11 +235,14 @@ exports.secondaryOrderSummaryForAfm = async (req, res) => {
     const parsedParams = utilFunctions.parseParams(req.query);
     const finalPdf = await orderListShareImpl.getDataToShareOrder(parsedParams);
 
-    res.set({
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename=${Date.now()}.pdf`,
-        "Content-Length": finalPdf.length,
-    });
-
-    res.send(finalPdf);
+    try {
+        res.set({
+            "Content-Type": "application/pdf",
+            "Content-Disposition": `attachment; filename=${Date.now()}.pdf`,
+            "Content-Length": finalPdf.length,
+        });
+        res.send(finalPdf);
+    } catch (error) {
+        res.status(500).json(new ApiResponse.Error([error.message]));
+    }
 }
