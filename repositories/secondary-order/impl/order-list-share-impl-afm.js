@@ -48,22 +48,6 @@ class OrderListShareImplAfm {
 
     }
 
-    static prepareDistributorMarket(distributorId, itemInfos, marketMap)  {
-        const marketIds = itemInfos
-            .filter(item => Number(item.distributorid) === distributorId)
-            .flatMap(item => item.marketid);
-        const marketIdArray = Array.from(new Set(marketIds));
-        let markets = [];
-        marketIdArray.forEach((marketId) => {
-            markets.push(marketMap.get(marketId))
-        });
-        return {
-            marketIdArray,
-            markets
-        };
-
-    }
-
     static async prepareTopSheetForAfm(orderIdList) {
         try {
             const topSheetQuery = orderListShareSql.getInfoForTopSheetOfAfmSql();
@@ -76,7 +60,7 @@ class OrderListShareImplAfm {
             });
             const itemInfos = Array.from(topSheetQueryResult);
 
-            console.log(itemInfos);
+            // console.log(itemInfos);
 
             const productIdSet = new Set();
             const distributorIdSet = new Set();
@@ -138,9 +122,7 @@ class OrderListShareImplAfm {
                 topSheetData.setDistributor(distributorMap.get(distributorId));
                 topSheetData.setUserId(users[0].id);
                 topSheetData.setUser(users[0]);
-                const {marketIdArray: marketIds, markets} = this.prepareDistributorMarket(distributorId, itemInfos, marketMap);
-                topSheetData.setMarketIds(marketIds);
-                topSheetData.setMarkets(markets);
+                marketMapByDistributor.set(distributorId, new Set())
                 topSheetMap.set(distributorId, topSheetData);
             });
 
@@ -152,11 +134,23 @@ class OrderListShareImplAfm {
                 item.setTotalUnit(itemInfo.totalunit);
                 item.setTotalAmount(itemInfo.totalamount);
                 item.setMeasurementUnit(productMap.get(Number(itemInfo.productid)).measurementUnit);
-
+                const previousIds = Array.from(marketMapByDistributor.get(Number(itemInfo.distributorid)));
+                marketMapByDistributor.set(Number(itemInfo.distributorid), new Set([...previousIds,...itemInfo.marketid]));
                 const topSheet = topSheetMap.get(Number(itemInfo.distributorid));
                 topSheet.setItemInfos(item);
             }
-            // console.log(topSheetMap);
+
+            distributorIdArray.forEach(distributorId => {
+                const marketIds = Array.from(marketMapByDistributor.get(distributorId));
+                const markets = [];
+                marketIds.forEach(marketId => {
+                    markets.push(marketMap.get(marketId));
+                });
+                const topSheet = topSheetMap.get(distributorId);
+                topSheet.setMarkets(markets);
+                topSheet.setMarketIds(marketIds);
+            });
+
             return pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap);
 
         } catch (error) {
