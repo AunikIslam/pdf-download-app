@@ -17,6 +17,7 @@ class MarketSql {
             FROM market_details mdv
             WHERE mdv.market_id = ANY (ARRAY [:id_filter])`
     }
+
     static getMinimizedListSQL() {
         return `SELECT mdv.market_id               AS marketId,
                    mdv.market_active_status        AS active,
