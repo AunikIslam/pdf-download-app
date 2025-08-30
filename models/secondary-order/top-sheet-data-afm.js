@@ -1,8 +1,9 @@
-class TopSheetData {
+class TopSheetDataAfm {
     constructor() {
         this.userId = null;
         this.user = null;
-        this.market = null;
+        this.marketIds = [];
+        this.markets = [];
         this.distributorId = null;
         this.distributor = null;
         this.itemInfos = [];
@@ -20,8 +21,12 @@ class TopSheetData {
         return this;
     }
 
-    setMarket(market) {
-        this.market = market;
+    setMarketIds(marketIds) {
+        this.marketIds = marketIds;
+    }
+
+    setMarkets(markets) {
+        this.markets = markets;
         return this;
     }
 
@@ -40,11 +45,6 @@ class TopSheetData {
         return this;
     }
 
-    setDiscountInfos(discountInfos) {
-        this.discountInfos = discountInfos;
-        return this;
-    }
-
     setOrderAmount(orderAmount) {
         this.orderAmount = orderAmount;
         return this;
@@ -56,13 +56,8 @@ class TopSheetData {
             this.distributor = null;
             this.productId = null;
             this.product = null;
-            this.unit = null;
-            this.bonus = null;
             this.totalUnit = null;
             this.totalVolume = null;
-            this.ctn = null;
-            this.subTotal = null;
-            this.discountTotal = null;
             this.totalAmount = null;
             this.measurementUnit = null;
         }
@@ -71,12 +66,7 @@ class TopSheetData {
         setDistributor(distributor) { this.distributor = distributor; return this;}
         setProductId(id) { this.productId = id; return this; }
         setProduct(product) { this.product = product; return this; }
-        setUnit(unit) { this.unit = unit; return this; }
-        setBonus(bonus) { this.bonus = bonus; return this; }
         setTotalUnit(total) { this.totalUnit = total; return this; }
-        setCtn(ctn) { this.ctn = ctn; return this; }
-        setSubTotal(subTotal) { this.subTotal = subTotal; return this; }
-        setDiscountTotal(discount) { this.discountTotal = discount; return this; }
         setTotalAmount(amount) { this.totalAmount = amount; return this; }
         setTotalVolume(volume) { this.totalVolume = volume; return this; }
         setMeasurementUnit(measurementUnit) { this.measurementUnit = measurementUnit; return this; }
@@ -84,4 +74,4 @@ class TopSheetData {
     }
 }
 
-module.exports = TopSheetData;
+module.exports = TopSheetDataAfm;
