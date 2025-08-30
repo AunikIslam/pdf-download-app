@@ -39,6 +39,11 @@
         </div>
         <div class="distributor-info">
             <div><%= value.distributor.name %></div>
+            <div>
+                <% value.markets.forEach( (market, index) =>  { %>
+                    <%= market.marketname %><b>(<%= market.marketcode %>)</b> <% index === value.markets.length - 1 ? '.' : ', ' %>
+                <% }) %>
+            </div>
             <div><%= value.distributor.address %></div>
         </div>
     </div>
