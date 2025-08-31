@@ -21,7 +21,6 @@ router.get('/secondary-order-summary-for-rtm', pdfExportController.secondaryOrde
  *           type: object
  *         example: |
  *           {
- *              "guid": "string",
  *              "fromDate": "2025-07-15",
  *              "toDate": "2025-08-06",
  *              "retailerId": 0,
@@ -37,6 +36,24 @@ router.get('/secondary-order-summary-for-rtm', pdfExportController.secondaryOrde
  *                  schema:
  *                      type: string
  *                      format: binary
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *             application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/ErrorResponse400"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *             application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/ErrorResponse401"
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *             application/json:
+ *                  schema:
+ *                      $ref: "#/components/schemas/ErrorResponse500"
  */
 router.get('/api/v1/get-secondary-order-pdf-for-afm', pdfExportController.secondaryOrderSummaryForAfm);
 
