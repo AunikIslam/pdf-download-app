@@ -233,6 +233,12 @@ exports.secondaryOrderSummaryForRtm = async (req, res) => {
 
 exports.secondaryOrderSummaryForAfm = async (req, res) => {
     const parsedParams = utilFunctions.parseParams(req.query);
+    if (parsedParams.fromDate == null) {
+        return res.status(400).json(new ApiResponse.Error(['From Date is required'], 400));
+    }
+    if (parsedParams.toDate == null) {
+        return res.status(400).json(new ApiResponse.Error(['To Date is required'], 400));
+    }
     const finalPdf = await orderListShareImpl.getDataToShareOrder(parsedParams);
 
     try {
