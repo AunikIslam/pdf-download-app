@@ -35,10 +35,9 @@ class OrderListShareImplAfm {
             });
             const orderIdList = orderIdsQueryResult.map(row => Number(row.id));
 
-            // console.log(`Order Id List`)
-            // console.log(orderIdList)
-
-            /* Code injection required: Need to add check if order id list is empty */
+            if (orderIdList.length == 0) {
+                return;
+            }
 
             return await this.prepareTopSheetForAfm(orderIdList);
 
