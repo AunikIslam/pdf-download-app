@@ -15,6 +15,7 @@ const sessionContextService = require('./services/session-context-service');
 const setupSwagger = require('./config/swagger-config');
 const checkForWhiteListUrl = require('./utils/white-list-urls');
 const environmentConfig = require("./config/environment-config");
+const ApiResponse = require("./models/api-response");
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -49,7 +50,7 @@ const validateToken = async (req, res, next) => {
         }
         catch (error) {
             console.log(`Error from token validate api: ${error.message}`);
-            return res.status(401);
+            return res.status(401).json(new ApiResponse.Error(['Failed to validate token'], 401));
         }
     }
 
