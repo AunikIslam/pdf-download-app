@@ -35,7 +35,7 @@ class OrderListShareImplAfm {
             });
             const orderIdList = orderIdsQueryResult.map(row => Number(row.id));
 
-            if (orderIdList.length == 0) {
+            if (orderIdList.length === 0) {
                 return;
             }
 
