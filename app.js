@@ -14,8 +14,12 @@ const baseService = require('./services/base-service');
 const sessionContextService = require('./services/session-context-service');
 const setupSwagger = require('./config/swagger-config');
 const checkForWhiteListUrl = require('./utils/white-list-urls');
-const environmentConfig = require("./config/environment-config");
 const ApiResponse = require("./models/api-response");
+const browserPool = require('./config/browser-pool');
+
+(async () => {
+    await browserPool.launchBrowser();
+})();
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
