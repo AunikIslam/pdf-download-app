@@ -7,6 +7,7 @@ const { chromium } = require('playwright');
 const dummyDataSet = require("../../../utils/dummy-data-set");
 const utilFunctions = require("../../../utils/util-functions");
 const ApiResponse = require("../../../models/api-response");
+const browserPool = require('../../../config/browser-pool');
 
 class PdfPreparationImpl {
 
@@ -72,7 +73,7 @@ class PdfPreparationImpl {
                     throw new Error(`Failed while rendering template. Contact Support`);
                 });
 
-            const browser = await chromium.launch({ headless: true });
+            const browser = await browserPool.getBrowser();
             const context = await browser.newContext();
 
             const [portraitPdf, mergedPdf] = await Promise.all([
@@ -83,10 +84,6 @@ class PdfPreparationImpl {
                 .catch((error) => {
                     throw new Error(`Failed while preparing pdf. Contact Support`);
                 });
-
-            await browser.close().catch(error => {
-                throw new Error(`Failed while closing browser. Contact Support`);
-            });
 
             const [portraitDoc] = await Promise.all([
                 PDFDocument.load(portraitPdf),
