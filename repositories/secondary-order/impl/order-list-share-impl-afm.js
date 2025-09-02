@@ -39,7 +39,7 @@ class OrderListShareImplAfm {
                 return;
             }
 
-            return await this.prepareTopSheetForAfm(orderIdList);
+            return await this.prepareSecondaryOrderPdfForAfm(orderIdList);
 
         } catch (error) {
             console.error(`$Error from order ids fetch: ${error.message}`);
@@ -47,35 +47,58 @@ class OrderListShareImplAfm {
 
     }
 
-    static async prepareTopSheetForAfm(orderIdList) {
+    static async prepareSecondaryOrderPdfForAfm(orderIdList) {
         try {
             const topSheetQuery = orderListShareSql.getInfoForTopSheetOfAfmSql();
-            const topSheetReplacements = {
+            const detailQuery = orderListShareSql.getOrderDetailOfAfmSql();
+
+            const replacements = {
                 order_ids: orderIdList
             }
-            const topSheetQueryResult = await sequelize.query(topSheetQuery, {
-                replacements: topSheetReplacements,
-                type: sequelize.QueryTypes.SELECT
-            });
-            const itemInfos = Array.from(topSheetQueryResult);
+
+            const [topSheetQueryResult, detailQueryResult] = await Promise.all([
+                await sequelize.query(topSheetQuery, {
+                    replacements: replacements,
+                    type: sequelize.QueryTypes.SELECT
+                }),
+                await sequelize.query(orderDetailQuery, {
+                    replacements: replacements,
+                    type: sequelize.QueryTypes.SELECT
+                })
+            ]);
+
+            const topSheetItems = Array.from(topSheetQueryResult);
+            const detailItems = Array.from(detailQueryResult)
 
             // console.log(itemInfos);
 
             const productIdSet = new Set();
             const distributorIdSet = new Set();
             const marketIdSet = new Set();
+            const retailerIdSet = new Set();
 
-            itemInfos.forEach(item => {
+            topSheetItems.forEach(item => {
                 productIdSet.add(Number(item.productid));
                 distributorIdSet.add(Number(item.distributorid));
                 marketIdSet.add(...item.marketid);
             });
 
+            detailItems.forEach(item => {
+                retailerIdSet.add(Number(item.retailerid));
+            })
+
             const productIdArray = Array.from(productIdSet);
             const distributorIdArray = Array.from(distributorIdSet);
             const marketIdArray = Array.from(marketIdSet);
+            const retailerIdArray = Array.from(retailerIdSet);
 
-            const [products, distributors, users, markets] = await Promise.all([
+            const [
+                products,
+                distributors,
+                users,
+                markets,
+                retailer
+            ] = await Promise.all([
                 product.findAll({
                     attributes: ['id', 'name', 'code', 'measurementUnit'],
                     where: {
@@ -125,7 +148,7 @@ class OrderListShareImplAfm {
                 topSheetMap.set(distributorId, topSheetData);
             });
 
-            for (const itemInfo of itemInfos) {
+            for (const itemInfo of topSheetItems) {
                 const item = new TopSheetDataAfm.ItemInfo();
                 item.setProductId(Number(itemInfo.productid));
                 item.setProduct(productMap.get(Number(itemInfo.productid)));
@@ -134,7 +157,7 @@ class OrderListShareImplAfm {
                 item.setTotalAmount(itemInfo.totalamount);
                 item.setMeasurementUnit(productMap.get(Number(itemInfo.productid)).measurementUnit);
                 const previousIds = Array.from(marketMapByDistributor.get(Number(itemInfo.distributorid)));
-                marketMapByDistributor.set(Number(itemInfo.distributorid), new Set([...previousIds,...itemInfo.marketid]));
+                marketMapByDistributor.set(Number(itemInfo.distributorid), new Set([...previousIds, ...itemInfo.marketid]));
                 const topSheet = topSheetMap.get(Number(itemInfo.distributorid));
                 topSheet.setItemInfos(item);
             }
