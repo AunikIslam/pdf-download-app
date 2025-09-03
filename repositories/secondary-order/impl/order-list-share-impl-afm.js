@@ -5,10 +5,12 @@ const sequelize = require('../../../utils/database-connection');
 const marketFilterImpl = require('../../market/impl/market-filter-impl');
 const product = require('../../../models/product/product-model');
 const distributor = require('../../../models/distributor/distributor-model');
-const marketImpl = require('../../market/impl/market-impl');
 const user = require('../../../models/user/user-model');
+const marketImpl = require('../../market/impl/market-impl');
+const retailer = require('../../../models/retailers/retailer-model');
 const sessionContextService = require('../../../services/session-context-service');
 const TopSheetDataAfm = require('../../../models/secondary-order/top-sheet-data-afm');
+const OrderDetailDataAfm = require('../../../models/secondary-order/order-detail-data-afm');
 const pdfPreparationImpl = require('../impl/pdf-preparation-impl');
 
 class OrderListShareImplAfm {
@@ -61,7 +63,7 @@ class OrderListShareImplAfm {
                     replacements: replacements,
                     type: sequelize.QueryTypes.SELECT
                 }),
-                await sequelize.query(orderDetailQuery, {
+                await sequelize.query(detailQuery, {
                     replacements: replacements,
                     type: sequelize.QueryTypes.SELECT
                 })
@@ -76,6 +78,7 @@ class OrderListShareImplAfm {
             const distributorIdSet = new Set();
             const marketIdSet = new Set();
             const retailerIdSet = new Set();
+            const userIdSet = new Set();
 
             topSheetItems.forEach(item => {
                 productIdSet.add(Number(item.productid));
@@ -85,6 +88,7 @@ class OrderListShareImplAfm {
 
             detailItems.forEach(item => {
                 retailerIdSet.add(Number(item.retailerid));
+                userIdSet.add(Number(item.userid));
             })
 
             const productIdArray = Array.from(productIdSet);
@@ -95,9 +99,10 @@ class OrderListShareImplAfm {
             const [
                 products,
                 distributors,
-                users,
+                loggedUser,
                 markets,
-                retailer
+                retailers,
+                users
             ] = await Promise.all([
                 product.findAll({
                     attributes: ['id', 'name', 'code', 'measurementUnit'],
@@ -110,18 +115,25 @@ class OrderListShareImplAfm {
                         id: distributorIdArray
                     }
                 }),
-                user.findAll({
+                user.findOne({
                     attributes: ['id', 'name', 'code', 'mobile', 'phone'],
                     where: {
                         id: sessionContextService.getUserId()
                     }
                 }),
                 marketImpl.findAll(marketIdArray),
+                retailer.findAll({
+                    attributes: ['id', 'name', 'code', 'ownerName', 'ownerPhone', 'mobile', 'phone', 'address'],
+                    where: {
+                        id: retailerIdArray
+                    }
+                })
             ]);
 
             const productMap = new Map();
             const distributorMap = new Map();
             const marketMap = new Map();
+            const retailerMap = new Map();
             const marketMapByDistributor = new Map();
 
             products.forEach(product => {
@@ -136,14 +148,20 @@ class OrderListShareImplAfm {
                 marketMap.set(Number(market.marketid), market);
             });
 
-            let topSheetMap = new Map();
+            retailers.forEach(retailer => {
+                retailerMap.set(Number(retailer.id), retailer);
+            });
 
+            let topSheetMap = new Map();
+            let detailInfoMap = new Map();
+
+            console.log(loggedUser)
             distributorIdArray.forEach((distributorId, index) => {
                 const topSheetData = new TopSheetDataAfm();
                 topSheetData.setDistributorId(distributorId);
                 topSheetData.setDistributor(distributorMap.get(distributorId));
-                topSheetData.setUserId(users[0].id);
-                topSheetData.setUser(users[0]);
+                // topSheetData.setUserId(user.id);
+                // topSheetData.setUser(user);
                 marketMapByDistributor.set(distributorId, new Set())
                 topSheetMap.set(distributorId, topSheetData);
             });
@@ -172,6 +190,20 @@ class OrderListShareImplAfm {
                 topSheet.setMarkets(markets);
                 topSheet.setMarketIds(marketIds);
             });
+
+
+            for (const item of detailItems) {
+                if (detailInfoMap.has(item.orderid)) {
+
+                } else {
+                    const detailInfo = new OrderDetailDataAfm();
+                    detailInfo.setOrderId(Number(detailInfo.orderid));
+                    // detailInfo.setOrderDate(utilFunctions.datePipe(detailInfo.orderdate, `dd-MMM-yyyy`));
+                    // detailInfo.setUserId(Number(detailInfo.userId));
+                    // detailInfo.setUser()
+                    detailInfoMap.set(Number(item.orderid), new OrderDetailDataAfm());
+                }
+            }
 
             return pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap);
 
