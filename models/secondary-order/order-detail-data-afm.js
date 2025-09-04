@@ -9,8 +9,11 @@ class OrderDetailDataAfm {
         this.distributorId = null;
         this.distributor = null;
         this.remarks = null;
+        this.isApproved = null;
         this.productIds = [];
         this.productInfos = [];
+        this.totalVolume = 0;
+        this.totalAmount = 0;
     }
 
     setOrderId(orderId) {
@@ -30,6 +33,16 @@ class OrderDetailDataAfm {
 
     setUser(user) {
         this.user = user;
+        return this;
+    }
+
+    setDistributorId(distributorId) {
+        this.distributorId = distributorId;
+        return this;
+    }
+
+    setDistributor(distributor) {
+        this.distributor = distributor;
         return this;
     }
 
@@ -58,33 +71,19 @@ class OrderDetailDataAfm {
         return this;
     }
 
-    static ProductInfo = class {
-        constructor() {
-            this.product = null;
-            this.etp = null;
-            this.pcs = null;
-            this.volume = null;
-        }
+    setApproval(approval) {
+        this.isApproved = approval;
+        return this;
+    }
 
-        setProduct(product) {
-            this.product = product;
-            return this;
-        }
+    setTotalVolume(volume) {
+        this.totalVolume += volume;
+        return this;
+    }
 
-        setEtp(price) {
-            this.etp = price;
-            return this;
-        }
-
-        setPcs(pcs) {
-            this.pcs = pcs;
-            return this;
-        }
-
-        setVolume(volume) {
-            this.volume = volume;
-            return this;
-        }
+    setTotalAmount(amount) {
+        this.totalAmount += amount;
+        return this;
     }
 }
 
