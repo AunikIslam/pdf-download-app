@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        <%= styles %>
+    </style>
+</head>
+<body>
+<% for (const [key, order] of items) { %>
+    <div class="order-template-container">
+        <div class="order-header-section">
+            <img src="<%= orgLogo %>">
+            <div class="template-mid-section">
+                <table class="template-mid-section-child">
+                    <tr>
+                        <th>Distributor:</th>
+                    </tr>
+                    <tr>
+                        <th><%= order.distributor.name %></th>
+                    </tr>
+                    <tr>
+                        <td>Code: <%= order.distributor.code %></td>
+                    </tr>
+                    <% if (order.distributor.address) { %>
+                        <tr>
+                            <td><%= order.distributor.address %></td>
+                        </tr>
+                    <% } %>
+                    <% if (order.distributor.mobile) { %>
+                        <tr>
+                            <td><%= order.distributor.mobile %></td>
+                        </tr>
+                    <% } %>
+                    <% if (order.distributor.phone) { %>
+                        <tr>
+                            <td><%= order.distributor.phone %></td>
+                        </tr>
+                    <% } %>
+                </table>
+
+                <table class="template-mid-section-child">
+                    <tr>
+                        <th>Retailer:</th>
+                    </tr>
+                    <tr>
+                        <th><%= order.retailer.name %></th>
+                    </tr>
+                    <tr>
+                        <td>Code: <%= order.retailer.code %></td>
+                    </tr>
+                    <% if (order.retailer.address) { %>
+                        <tr>
+                            <td><%= order.retailer.address %></td>
+                        </tr>
+                    <% } %>
+                    <% if (order.retailer.mobile) { %>
+                        <tr>
+                            <td><%= order.retailer.mobile %></td>
+                        </tr>
+                    <% } %>
+                </table>
+            </div>
+
+            <div class="template-info-section">
+                <table>
+                    <tr>
+                        <td>Order</td>
+                        <td>#<%= order.orderId %></td>
+                    </tr>
+                    <tr>
+                        <td>Order Time</td>
+                        <td><%= order.orderDate %></td>
+                    </tr>
+                    <tr>
+                        <td>Market</td>
+                        <td>Market</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td><%= order.isApproved %></td>
+                    </tr>
+                    <tr>
+                        <td>Created by</td>
+                        <td>User</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+        <div class="template-order-remarks"><b>Comment:</b> This is default format.</div>
+    </div>
+    <div class="page-break"></div>
+<% } %>
+
+<script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+</body>
+</html>
+
+
