@@ -229,6 +229,8 @@ class OrderListShareImplAfm {
                     detailInfo.setApproval(utilFunctions.approvalPipe(item.isapproved));
                     detailInfo.setTotalAmount(item.total);
                     detailInfo.setTotalVolume(item.volume);
+                    detailInfo.setMarketId(Number(item.marketid));
+                    detailInfo.setMarket(marketMap.get(Number(item.marketid)));
                     detailInfo.setProductInfos({
                         product: productMap.get(Number(item.productid)),
                         etp: utilFunctions.currencyPipe(item.etp),
