@@ -10,7 +10,7 @@ router.get('/secondary-order-summary-for-rtm', pdfExportController.secondaryOrde
  * @swagger
  * /pdf-export/api/v1/get-secondary-order-pdf-for-afm:
  *   get:
- *     summary: Get user by ID
+ *     summary: Get secondary order pdf
  *     tags: [pdf-export-controller]
  *     operationId: users
  *     parameters:
@@ -21,8 +21,8 @@ router.get('/secondary-order-summary-for-rtm', pdfExportController.secondaryOrde
  *           type: object
  *         example: |
  *           {
- *              "fromDate": "2025-07-15",
- *              "toDate": "2025-08-06",
+ *              "fromDate": "2025-08-29",
+ *              "toDate": "2025-08-29",
  *              "retailerId": 0,
  *              "distributorId": 0,
  *              "approveFilter": "string",
