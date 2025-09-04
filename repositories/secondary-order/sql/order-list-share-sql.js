@@ -43,17 +43,19 @@ class OrderListShareSql {
     }
 
     static getOrderDetailOfAfmSql() {
-        return `SELECT DISTINCT o.id                        AS orderId
-              , o.order_date                                AS orderDate
-              , o.created_by                                AS userId
-              , o.customer_id                               AS retailerId
-              , o.market_id                                 AS marketId
-              , o.distributor_id                            AS distributorId
-              , o.remarks                                   AS remarks
-              , d.product_id                                AS productId
-              , coalesce(d.price - d.discount, 0.0)         AS etp
-              , coalesce(d.unit, 0.0)                       AS pcs
-              , coalesce(d.volume, 0.0)                     AS volume
+        return `SELECT DISTINCT o.id                            AS orderId
+              , o.order_date                                    AS orderDate
+              , o.created_by                                    AS userId
+              , o.customer_id                                   AS retailerId
+              , o.market_id                                     AS marketId
+              , o.distributor_id                                AS distributorId
+              , o.remarks                                       AS remarks
+              , o.is_approved                                   AS isApproved
+              , d.product_id                                    AS productId
+              , coalesce(d.price - d.discount, 0.0)             AS etp
+              , coalesce(d.unit, 0.0)                           AS pcs
+              , coalesce(d.volume, 0.0)                         AS volume
+              , coalesce((d.price-d.discount) * d.unit, 0.0)    AS total
                 FROM secondary_orders o
                 LEFT JOIN secondary_order_details d ON o.id = d.order_id
                 WHERE o.id IN (SELECT unnest(ARRAY[:order_ids]))`
