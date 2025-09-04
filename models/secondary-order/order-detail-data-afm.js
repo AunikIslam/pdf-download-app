@@ -14,6 +14,8 @@ class OrderDetailDataAfm {
         this.productInfos = [];
         this.totalVolume = 0;
         this.totalAmount = 0;
+        this.marketId = null;
+        this.market = null;
     }
 
     setOrderId(orderId) {
@@ -83,6 +85,16 @@ class OrderDetailDataAfm {
 
     setTotalAmount(amount) {
         this.totalAmount += amount;
+        return this;
+    }
+
+    setMarketId(id) {
+        this.marketId = id;
+        return this;
+    }
+
+    setMarket(market) {
+        this.market = market;
         return this;
     }
 }
