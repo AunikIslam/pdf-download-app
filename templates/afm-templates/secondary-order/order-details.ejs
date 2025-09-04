@@ -75,7 +75,7 @@
                     </tr>
                     <tr>
                         <td>Market</td>
-                        <td>Market</td>
+                        <td><%= order.market.marketname %><b>(<%= order.market.marketcode %>)</b></td>
                     </tr>
                     <tr>
                         <td>Status</td>
@@ -83,13 +83,13 @@
                     </tr>
                     <tr>
                         <td>Created by</td>
-                        <td>User</td>
+                        <td><%= order.user.name %><b>(<%= order.user.code %>)</b></td>
                     </tr>
                 </table>
             </div>
 
         </div>
-        <div class="template-order-remarks"><b>Comment:</b> This is default format.</div>
+        <div class="template-order-remarks"><b>Comment:</b> <%= order.remarks%></div>
     </div>
     <div class="page-break"></div>
 <% } %>
