@@ -4,7 +4,6 @@ const rootDir = require('../../../utils/path');
 const fs = require('fs');
 const {PDFDocument} = require('pdf-lib');
 const { chromium } = require('playwright');
-const dummyDataSet = require("../../../utils/dummy-data-set");
 const utilFunctions = require("../../../utils/util-functions");
 const ApiResponse = require("../../../models/api-response");
 const browserPool = require('../../../config/browser-pool');
@@ -45,67 +44,75 @@ class PdfPreparationImpl {
         return pdfBuffer;
     }
 
-    static async prepareSecondaryOrderPdfForAfm(topSheetContent) {
+    static async prepareSecondaryOrderPdfForAfm(topSheetContent, detailContent) {
         const imagePath = path.join(rootDir, 'public', 'logos', 'rtm.png');
         const imagePathForDetails = path.join(rootDir, 'public', 'logos', 'rtm-small.png');
-        const cssPathForTopSheet = path.join(rootDir, 'public', 'css', 'afm-secondary-order-top-sheet.css');
-        // const cssPathForDetails = path.join(rootDir, 'public', 'css', 'rtm-product-details.css');
+        const cssPathForTopSheet = path.join(rootDir, 'public', 'css', 'afm', 'afm-secondary-order-top-sheet.css');
+        const cssPathForDetails = path.join(rootDir, 'public', 'css', 'afm', 'afm-secondary-order-details.css');
 
         const base64 = fs.readFileSync(imagePath).toString('base64');
         const base64ForDetails = fs.readFileSync(imagePathForDetails).toString('base64');
         const stylesForTopSheet = fs.readFileSync(cssPathForTopSheet, 'utf8');
-        // const stylesForDetails = fs.readFileSync(cssPathForDetails, 'utf8');
+        const stylesForDetails = fs.readFileSync(cssPathForDetails, 'utf8');
 
         const orgLogo = `data:image/png;base64,${base64}`;
         const orgLogoForDetails = `data:image/png;base64,${base64ForDetails}`;
 
         try {
             const filePathForTopSheet = path.join(rootDir, 'templates', 'afm-templates', 'secondary-order', 'top-sheet.ejs');
-            const [contentOfTopSheet, contentOfOrderDetails] = await Promise.all([
+            const filePathForDetails = path.join(rootDir, 'templates', 'afm-templates', 'secondary-order', 'order-details.ejs');
+
+            const [contentOfTopSheet, orderDetailsContent] = await Promise.all([
                 ejs.renderFile(filePathForTopSheet, {
                     orgLogo: orgLogo,
                     styles: stylesForTopSheet,
                     items: topSheetContent,
                     utilFunctions
+                }),
+                ejs.renderFile(filePathForDetails, {
+                    orgLogo: orgLogo,
+                    styles: stylesForDetails,
+                    items: detailContent
                 })
             ])
                 .catch((error) => {
+                    console.log(error.message);
                     throw new Error(`Failed while rendering template. Contact Support`);
                 });
 
             const browser = await browserPool.getBrowser();
             const context = await browser.newContext();
 
-            const [portraitPdf, mergedPdf] = await Promise.all([
+            const [topSheetPdf, detailsPdf, mergedPdf] = await Promise.all([
                 this.preparePdf(contentOfTopSheet, context),
-                // preparePdf(contentOfOrderDetails, context, true),
+                this.preparePdf(orderDetailsContent, context),
                 PDFDocument.create()
             ])
                 .catch((error) => {
                     throw new Error(`Failed while preparing pdf. Contact Support`);
                 });
 
-            const [portraitDoc] = await Promise.all([
-                PDFDocument.load(portraitPdf),
-                // PDFDocument.load(landscapePdf)
+            const [topSheetDoc, detailsDoc] = await Promise.all([
+                PDFDocument.load(topSheetPdf),
+                PDFDocument.load(detailsPdf)
             ]).catch(error => {
                 throw new Error(`Failed while loading doc. Contact Support.`);
             });
 
-            const [portraitPages] = await Promise.all([
-                mergedPdf.copyPages(portraitDoc, portraitDoc.getPageIndices()),
-                // mergedPdf.copyPages(landscapeDoc, landscapeDoc.getPageIndices())
+            const [topSheetPages, detailsPages] = await Promise.all([
+                mergedPdf.copyPages(topSheetDoc, topSheetDoc.getPageIndices()),
+                mergedPdf.copyPages(detailsDoc, detailsDoc.getPageIndices())
             ]).catch(error => {
                 throw new Error(`Failed while copying pages. Contact Support.`);
             });
 
-            portraitPages.forEach((portraitPage) => mergedPdf.addPage(portraitPage));
-            // landscapePages.forEach((landscapePage) => mergedPdf.addPage(landscapePage));
+            topSheetPages.forEach((portraitPage) => mergedPdf.addPage(portraitPage));
+            detailsPages.forEach((landscapePage) => mergedPdf.addPage(landscapePage));
 
             return await mergedPdf.save();
         }
         catch (error) {
-
+            console.log(`Error from pdf generation: ${error.message}`)
         }
     }
 }
