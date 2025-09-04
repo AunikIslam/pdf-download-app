@@ -161,12 +161,10 @@ body {
     th {
         font-size: 1rem;
         text-align: left;
-        font-weight: normal;
     }
 
     td {
         font-size: 0.8rem;
-        font-weight: lighter;
     }
 }
 
@@ -178,7 +176,6 @@ body {
 }
 
 .template-info-section tr {
-    font-weight: lighter;
     td:first-child {
         text-align: right;
         color: rgba(0, 0, 0, 0.6);
@@ -192,7 +189,6 @@ body {
 
 .template-info-section tr:first-child {
     font-size: 1.5rem;
-    font-weight: lighter;
 }
 
 .template-info-section tr:not(:first-child) {
