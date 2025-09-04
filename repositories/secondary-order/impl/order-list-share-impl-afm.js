@@ -72,8 +72,6 @@ class OrderListShareImplAfm {
             const topSheetItems = Array.from(topSheetQueryResult);
             const detailItems = Array.from(detailQueryResult)
 
-            console.log(detailItems)
-
             const productIdSet = new Set();
             const distributorIdSet = new Set();
             const marketIdSet = new Set();
@@ -100,7 +98,7 @@ class OrderListShareImplAfm {
             const [
                 products,
                 distributors,
-                user,
+                loggedUser,
                 markets,
                 retailers,
                 users
@@ -171,8 +169,8 @@ class OrderListShareImplAfm {
                 const topSheetData = new TopSheetDataAfm();
                 topSheetData.setDistributorId(distributorId);
                 topSheetData.setDistributor(distributorMap.get(distributorId));
-                topSheetData.setUserId(user.id);
-                topSheetData.setUser(user);
+                topSheetData.setUserId(loggedUser.id);
+                topSheetData.setUser(loggedUser);
                 marketMapByDistributor.set(distributorId, new Set())
                 topSheetMap.set(distributorId, topSheetData);
             });
@@ -205,19 +203,44 @@ class OrderListShareImplAfm {
 
             for (const item of detailItems) {
                 if (detailInfoMap.has(item.orderid)) {
-
+                    const detailInfo = detailInfoMap.get(Number(item.orderid));
+                    detailInfo.setProductIds(Number(item.productid));
+                    detailInfo.setTotalVolume(item.volume);
+                    detailInfo.setTotalAmount(item.total);
+                    detailInfo.setProductInfos({
+                        product: productMap.get(Number(item.productid)),
+                        etp: utilFunctions.currencyPipe(item.etp),
+                        pcs: utilFunctions.currencyPipe(item.pcs),
+                        volume: utilFunctions.currencyPipe(item.volume),
+                        total: utilFunctions.currencyPipe(item.total)
+                    })
                 } else {
                     const detailInfo = new OrderDetailDataAfm();
                     detailInfo.setOrderId(Number(item.orderid));
-                    detailInfo.setOrderDate(utilFunctions.datePipe(item.orderdate, `dd-MMM-yyyy`));
-                    detailInfo.setUserId(Number(item.userId));
-                    detailInfo.setUser(userMap.get(Number(item.userId)))
-                    // detailInfo.setUser()
+                    detailInfo.setOrderDate(utilFunctions.datePipe(item.orderdate, `dd-MMM-yyyy hh:mm a`));
+                    detailInfo.setUserId(Number(item.userid));
+                    detailInfo.setUser(userMap.get(Number(item.userid)));
+                    detailInfo.setDistributorId(item.distributorid);
+                    detailInfo.setDistributor(distributorMap.get(Number(item.distributorid)));
+                    detailInfo.setRetailerId(Number(item.retailerid));
+                    detailInfo.setRetailer(retailerMap.get(Number(item.retailerid)));
+                    detailInfo.setRemarks(item.remarks);
+                    detailInfo.setProductIds(Number(item.productid));
+                    detailInfo.setApproval(utilFunctions.approvalPipe(item.isapproved));
+                    detailInfo.setTotalAmount(item.total);
+                    detailInfo.setTotalVolume(item.volume);
+                    detailInfo.setProductInfos({
+                        product: productMap.get(Number(item.productid)),
+                        etp: utilFunctions.currencyPipe(item.etp),
+                        pcs: utilFunctions.currencyPipe(item.pcs),
+                        volume: utilFunctions.currencyPipe(item.volume),
+                        total: utilFunctions.currencyPipe(item.total)
+                    });
                     detailInfoMap.set(Number(item.orderid), detailInfo);
                 }
             }
-
-            return pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap);
+            console.dir(detailInfoMap, { depth: null, colors: true });
+            return pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap, detailInfoMap);
 
         } catch (error) {
             console.log(`Error from top sheet info fetch: ${error.message}`);
