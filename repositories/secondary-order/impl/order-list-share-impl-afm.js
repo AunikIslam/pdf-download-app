@@ -72,7 +72,7 @@ class OrderListShareImplAfm {
             const topSheetItems = Array.from(topSheetQueryResult);
             const detailItems = Array.from(detailQueryResult)
 
-            // console.log(itemInfos);
+            console.log(detailItems)
 
             const productIdSet = new Set();
             const distributorIdSet = new Set();
@@ -95,11 +95,12 @@ class OrderListShareImplAfm {
             const distributorIdArray = Array.from(distributorIdSet);
             const marketIdArray = Array.from(marketIdSet);
             const retailerIdArray = Array.from(retailerIdSet);
+            const userIdArray = Array.from(userIdSet);
 
             const [
                 products,
                 distributors,
-                loggedUser,
+                user,
                 markets,
                 retailers,
                 users
@@ -127,6 +128,12 @@ class OrderListShareImplAfm {
                     where: {
                         id: retailerIdArray
                     }
+                }),
+                user.findAll({
+                    attributes: ['id', 'name', 'code', 'mobile', 'phone'],
+                    where: {
+                        id: userIdArray
+                    }
                 })
             ]);
 
@@ -134,6 +141,7 @@ class OrderListShareImplAfm {
             const distributorMap = new Map();
             const marketMap = new Map();
             const retailerMap = new Map();
+            const userMap = new Map();
             const marketMapByDistributor = new Map();
 
             products.forEach(product => {
@@ -152,16 +160,19 @@ class OrderListShareImplAfm {
                 retailerMap.set(Number(retailer.id), retailer);
             });
 
+            users.forEach(user => {
+                userMap.set(Number(user.id), user);
+            });
+
             let topSheetMap = new Map();
             let detailInfoMap = new Map();
 
-            console.log(loggedUser)
             distributorIdArray.forEach((distributorId, index) => {
                 const topSheetData = new TopSheetDataAfm();
                 topSheetData.setDistributorId(distributorId);
                 topSheetData.setDistributor(distributorMap.get(distributorId));
-                // topSheetData.setUserId(user.id);
-                // topSheetData.setUser(user);
+                topSheetData.setUserId(user.id);
+                topSheetData.setUser(user);
                 marketMapByDistributor.set(distributorId, new Set())
                 topSheetMap.set(distributorId, topSheetData);
             });
@@ -197,11 +208,12 @@ class OrderListShareImplAfm {
 
                 } else {
                     const detailInfo = new OrderDetailDataAfm();
-                    detailInfo.setOrderId(Number(detailInfo.orderid));
-                    // detailInfo.setOrderDate(utilFunctions.datePipe(detailInfo.orderdate, `dd-MMM-yyyy`));
-                    // detailInfo.setUserId(Number(detailInfo.userId));
+                    detailInfo.setOrderId(Number(item.orderid));
+                    detailInfo.setOrderDate(utilFunctions.datePipe(item.orderdate, `dd-MMM-yyyy`));
+                    detailInfo.setUserId(Number(item.userId));
+                    detailInfo.setUser(userMap.get(Number(item.userId)))
                     // detailInfo.setUser()
-                    detailInfoMap.set(Number(item.orderid), new OrderDetailDataAfm());
+                    detailInfoMap.set(Number(item.orderid), detailInfo);
                 }
             }
 
