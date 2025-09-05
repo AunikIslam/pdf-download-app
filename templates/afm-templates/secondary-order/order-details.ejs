@@ -8,7 +8,7 @@
     </style>
 </head>
 <body>
-<% for (const [key, order] of items) { %>
+<% for (const order of items) { %>
     <div class="order-template-container">
         <div class="order-header-section">
             <img src="<%= orgLogo %>">
@@ -87,11 +87,49 @@
                     </tr>
                 </table>
             </div>
-
         </div>
-        <div class="template-order-remarks"><b>Comment:</b> <%= order.remarks%></div>
+        <div>
+            <table class="template-table" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="text-left">SKU</th>
+                    <th class="text-right">ETP</th>
+                    <th class="text-right">Pcs</th>
+                    <th class="text-right">Kg/Ltr</th>
+                    <th class="text-right">Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% for (let i = 0; i < order.productInfos.length; i++) {
+                    let orderDetail = order.productInfos[i];
+                %>
+                <tr>
+                    <td>
+                        <%= orderDetail.product.name %><b>(<%= orderDetail.product.code %>)</b>
+                    </td>
+                    <td class="text-right">
+                        <%= orderDetail.etp %>
+                    </td>
+                    <td class="text-right">
+                        <%= orderDetail.pcs %>
+                    </td>
+                    <td class="text-right">
+                        <%= orderDetail.volume %> <%= orderDetail.product.measurementUnit %>
+                    </td>
+                    <td class="text-right">
+                        <%= orderDetail.total %>
+                    </td>
+                </tr>
+                <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="template-order-remarks"><b>Comment:</b> <%= order.remarks %></div>
     </div>
-    <div class="page-break"></div>
+    <% if (!order.isLastPage) { %>
+        <div class="page-break"></div>
+    <% } %>
 <% } %>
 
 <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
