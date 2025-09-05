@@ -202,7 +202,7 @@ class OrderListShareImplAfm {
 
 
             for (const item of detailItems) {
-                if (detailInfoMap.has(item.orderid)) {
+                if (detailInfoMap.has(Number(item.orderid))) {
                     const detailInfo = detailInfoMap.get(Number(item.orderid));
                     detailInfo.setProductIds(Number(item.productid));
                     detailInfo.setTotalVolume(item.volume);
@@ -241,8 +241,23 @@ class OrderListShareImplAfm {
                     detailInfoMap.set(Number(item.orderid), detailInfo);
                 }
             }
-            console.dir(detailInfoMap, { depth: null, colors: true });
-            return pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap, detailInfoMap);
+            let detailInfoList = [];
+
+            const sliceSize = 18;
+
+            detailInfoMap.forEach((value, key) => {
+                const {productInfos, ...rest} = value;
+                const numberOfSlices = Math.ceil(productInfos.length / sliceSize);
+                for (let sliceNo = 0; sliceNo < numberOfSlices; sliceNo++) {
+                    const slicedProducts =
+                        productInfos
+                            .slice((sliceNo * sliceSize), (sliceNo * sliceSize) + sliceSize);
+                    detailInfoList.push({productInfos: slicedProducts, ...rest});
+                }
+            });
+            const lastItem = detailInfoList[detailInfoList.length - 1];
+            lastItem['isLastPage'] = true;
+            return await pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap, detailInfoList);
 
         } catch (error) {
             console.log(`Error from top sheet info fetch: ${error.message}`);
