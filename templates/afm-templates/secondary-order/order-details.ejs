@@ -92,6 +92,7 @@
             <table class="template-table" cellspacing="0">
                 <thead>
                 <tr>
+                    <th class="text-left">SL.</th>
                     <th class="text-left">SKU</th>
                     <th class="text-right">ETP</th>
                     <th class="text-right">Pcs</th>
@@ -104,6 +105,9 @@
                     let orderDetail = order.productInfos[i];
                 %>
                 <tr>
+                    <td>
+                        <%= orderDetail.serial %>.
+                    </td>
                     <td>
                         <%= orderDetail.product.name %><b>(<%= orderDetail.product.code %>)</b>
                     </td>
@@ -124,7 +128,18 @@
                 </tbody>
             </table>
         </div>
+        <table class="secondary-order-details-summary">
+            <tr>
+                <th class="text-right">Total Kg/Ltr</th>
+                <th class="text-right"><%= order.totalVolume %></th>
+            </tr>
 
+            <tr>
+                <th class="text-right">Total Amount</th>
+                <th class="text-right"><%= order.totalAmount %></th>
+            </tr>
+
+        </table>
         <div class="template-order-remarks"><b>Comment:</b> <%= order.remarks %></div>
     </div>
     <% if (!order.isLastPage) { %>
