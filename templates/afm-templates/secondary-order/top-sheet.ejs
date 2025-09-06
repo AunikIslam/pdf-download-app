@@ -38,13 +38,13 @@
             <div><%= value.user.name %><b>(<%= value.user.code %>)</b></div>
         </div>
         <div class="distributor-info">
-            <div><%= value.distributor.name %></div>
-            <div>
+            <div class="distributor-info-child"><%= value.distributor.name %></div>
+            <div class="distributor-info-child">
                 <% value.markets.forEach( (market, index) =>  { %>
                     <%= market.marketname %><b>(<%= market.marketcode %>)</b> <% index === value.markets.length - 1 ? '.' : ', ' %>
                 <% }) %>
             </div>
-            <div><%= value.distributor.address %></div>
+            <div class="distributor-info-child"><%= value.distributor.address %></div>
         </div>
     </div>
     <table class="product-table" cellspacing="0">
