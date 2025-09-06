@@ -208,6 +208,7 @@ class OrderListShareImplAfm {
                     detailInfo.setTotalVolume(item.volume);
                     detailInfo.setTotalAmount(item.total);
                     detailInfo.setProductInfos({
+                        serial: detailInfo.productInfos.length + 1,
                         product: productMap.get(Number(item.productid)),
                         etp: utilFunctions.currencyPipe(item.etp),
                         pcs: utilFunctions.currencyPipe(item.pcs),
@@ -232,6 +233,7 @@ class OrderListShareImplAfm {
                     detailInfo.setMarketId(Number(item.marketid));
                     detailInfo.setMarket(marketMap.get(Number(item.marketid)));
                     detailInfo.setProductInfos({
+                        serial: 1,
                         product: productMap.get(Number(item.productid)),
                         etp: utilFunctions.currencyPipe(item.etp),
                         pcs: utilFunctions.currencyPipe(item.pcs),
@@ -246,13 +248,20 @@ class OrderListShareImplAfm {
             const sliceSize = 18;
 
             detailInfoMap.forEach((value, key) => {
-                const {productInfos, ...rest} = value;
+                const {productInfos, totalVolume, totalAmount, ...rest} = value;
                 const numberOfSlices = Math.ceil(productInfos.length / sliceSize);
+                const truncatedTotalVolume = utilFunctions.currencyPipe(totalVolume);
+                const truncatedTotalAmount = utilFunctions.currencyPipe(totalAmount);
                 for (let sliceNo = 0; sliceNo < numberOfSlices; sliceNo++) {
                     const slicedProducts =
                         productInfos
                             .slice((sliceNo * sliceSize), (sliceNo * sliceSize) + sliceSize);
-                    detailInfoList.push({productInfos: slicedProducts, ...rest});
+                    detailInfoList.push({
+                        productInfos: slicedProducts,
+                        totalAmount: truncatedTotalAmount,
+                        totalVolume: truncatedTotalVolume,
+                        ...rest
+                    });
                 }
             });
             const lastItem = detailInfoList[detailInfoList.length - 1];
