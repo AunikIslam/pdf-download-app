@@ -3,7 +3,7 @@
 }
 
 body {
-    font-family: Inter, Helvetica, sans-serif
+    font-family: sans-serif
 }
 
 .template-table {
@@ -142,19 +142,12 @@ body {
     position: absolute;
     bottom: 10px;
     left: 10px;
-}
-
-.primary-order-details-summary {
-    margin-left: auto;
+    font-size: 0.8rem;
 }
 
 .secondary-order-details-summary {
     font-size: 0.8rem;
     margin-left: auto;
-}
-
-.invoice-container {
-    break-inside: avoid;
 }
 
 .page-break {
