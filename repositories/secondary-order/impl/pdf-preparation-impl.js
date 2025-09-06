@@ -7,7 +7,7 @@ const { chromium } = require('playwright');
 const utilFunctions = require("../../../utils/util-functions");
 const ApiResponse = require("../../../models/api-response");
 const browserPool = require('../../../config/browser-pool');
-
+const staticAssetService = require('../../../services/static-asset-service')
 class PdfPreparationImpl {
 
     static async preparePdf(data, context, isLandscape = false) {
@@ -45,15 +45,7 @@ class PdfPreparationImpl {
     }
 
     static async prepareSecondaryOrderPdfForAfm(topSheetContent, detailContent) {
-        const imagePath = path.join(rootDir, 'public', 'logos', 'afm.png');
-        const cssPathForTopSheet = path.join(rootDir, 'public', 'css', 'afm', 'afm-secondary-order-top-sheet.css');
-        const cssPathForDetails = path.join(rootDir, 'public', 'css', 'afm', 'afm-secondary-order-details.css');
-
-        const base64 = fs.readFileSync(imagePath).toString('base64');
-        const stylesForTopSheet = fs.readFileSync(cssPathForTopSheet, 'utf8');
-        const stylesForDetails = fs.readFileSync(cssPathForDetails, 'utf8');
-
-        const orgLogo = `data:image/png;base64,${base64}`;
+        const {orgLogo, stylesForTopSheet, stylesForDetails} = staticAssetService.getAfmStaticProperties()
 
         try {
             const filePathForTopSheet = path.join(rootDir, 'templates', 'afm-templates', 'secondary-order', 'top-sheet.ejs');
