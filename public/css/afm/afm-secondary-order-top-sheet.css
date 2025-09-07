@@ -127,3 +127,8 @@ body {
 .invoice-container {
     break-inside: avoid;
 }
+
+.secondary-order-details-summary {
+    font-size: 0.8rem;
+    margin-left: auto;
+}
