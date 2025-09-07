@@ -75,7 +75,11 @@
                     </tr>
                     <tr>
                         <td>Market</td>
-                        <td><%= order.market.marketname %><b>(<%= order.market.marketcode %>)</b></td>
+                        <td>
+                            <% if (order.market) { %>
+                                <%= order.market.marketname %><b>(<%= order.market.marketcode %>)</b>
+                            <% } %>
+                        </td>
                     </tr>
                     <tr>
                         <td>Status</td>
