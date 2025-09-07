@@ -13,6 +13,7 @@ const TopSheetDataAfm = require('../../../models/secondary-order/top-sheet-data-
 const OrderDetailDataAfm = require('../../../models/secondary-order/order-detail-data-afm');
 const pdfPreparationImpl = require('../impl/pdf-preparation-impl');
 
+
 class OrderListShareImplAfm {
     static async getDataToShareOrder(params) {
         try {
@@ -38,9 +39,8 @@ class OrderListShareImplAfm {
             const orderIdList = orderIdsQueryResult.map(row => Number(row.id));
 
             if (orderIdList.length === 0) {
-                return;
+                return 0;
             }
-
             return await this.prepareSecondaryOrderPdfForAfm(orderIdList);
 
         } catch (error) {
@@ -70,7 +70,10 @@ class OrderListShareImplAfm {
             ]);
 
             const topSheetItems = Array.from(topSheetQueryResult);
-            const detailItems = Array.from(detailQueryResult)
+            const detailItems = Array.from(detailQueryResult);
+
+            console.log(topSheetItems);
+            console.log(detailItems);
 
             const productIdSet = new Set();
             const distributorIdSet = new Set();
