@@ -241,6 +241,10 @@ exports.secondaryOrderSummaryForAfm = async (req, res) => {
     }
     const finalPdf = await orderListShareImpl.getDataToShareOrder(parsedParams);
 
+    if (finalPdf === 0) {
+        return res.status(200).json(new ApiResponse.Success(`No order available to print`));
+    }
+
     try {
         res.set({
             "Content-Type": "application/pdf",
