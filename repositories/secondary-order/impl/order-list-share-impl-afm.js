@@ -172,24 +172,32 @@ class OrderListShareImplAfm {
                 const topSheetData = new TopSheetDataAfm();
                 topSheetData.setDistributorId(distributorId);
                 topSheetData.setDistributor(distributorMap.get(distributorId));
-                topSheetData.setUserId(loggedUser.id);
+                topSheetData.setUserId(Number(loggedUser.id));
                 topSheetData.setUser(loggedUser);
+                topSheetData.setTotalAmount(0);
+                topSheetData.setTotalUnit(0);
                 marketMapByDistributor.set(distributorId, new Set())
                 topSheetMap.set(distributorId, topSheetData);
             });
 
+            let itemCounter = 0;
             for (const itemInfo of topSheetItems) {
                 const item = new TopSheetDataAfm.ItemInfo();
+                itemCounter++;
                 item.setProductId(Number(itemInfo.productid));
                 item.setProduct(productMap.get(Number(itemInfo.productid)));
                 item.setTotalVolume(itemInfo.totalvolume);
-                item.setTotalUnit(itemInfo.totalunit);
-                item.setTotalAmount(itemInfo.totalamount);
+                item.setTotalUnit(utilFunctions.currencyPipe(itemInfo.totalunit));
+                item.setTotalAmount(utilFunctions.currencyPipe(itemInfo.totalamount));
                 item.setMeasurementUnit(productMap.get(Number(itemInfo.productid)).measurementUnit);
+                item.setSerial(itemCounter);
                 const previousIds = Array.from(marketMapByDistributor.get(Number(itemInfo.distributorid)));
                 marketMapByDistributor.set(Number(itemInfo.distributorid), new Set([...previousIds, ...itemInfo.marketid]));
                 const topSheet = topSheetMap.get(Number(itemInfo.distributorid));
                 topSheet.setItemInfos(item);
+                topSheet.setTotalUnit(itemInfo.totalunit);
+                topSheet.setTotalAmount(itemInfo.totalamount);
+                topSheet.setTotalVolume(itemInfo.totalvolume);
             }
 
             distributorIdArray.forEach(distributorId => {
@@ -247,9 +255,30 @@ class OrderListShareImplAfm {
                 }
             }
             let detailInfoList = [];
+            let topSheetInfoList = [];
 
+            const topSheetSliceSize = 18;
             const sliceSize = 18;
 
+            topSheetMap.forEach((value, key) => {
+                const {itemInfos, totalAmount, totalUnit, totalVolume, ...rest} = value;
+                const numberOfSlices = Math.ceil(itemInfos.length / topSheetSliceSize);
+                for (let sliceNo = 0; sliceNo < numberOfSlices; sliceNo++) {
+                    const slicedProducts =
+                        itemInfos
+                            .slice((sliceNo * sliceSize), (sliceNo * sliceSize) + sliceSize);
+                    topSheetInfoList.push({
+                        itemInfos: slicedProducts,
+                        totalAmount: utilFunctions.currencyPipe(totalAmount),
+                        totalUnit: utilFunctions.currencyPipe(totalUnit),
+                        totalVolume: utilFunctions.currencyPipe(totalVolume),
+                        ...rest
+                    });
+                }
+            });
+
+            const lastItem2 = topSheetInfoList[topSheetInfoList.length - 1];
+            lastItem2['isLastPage'] = true;
             detailInfoMap.forEach((value, key) => {
                 const {productInfos, totalVolume, totalAmount, ...rest} = value;
                 const numberOfSlices = Math.ceil(productInfos.length / sliceSize);
@@ -269,7 +298,7 @@ class OrderListShareImplAfm {
             });
             const lastItem = detailInfoList[detailInfoList.length - 1];
             lastItem['isLastPage'] = true;
-            return await pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetMap, detailInfoList);
+            return await pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetInfoList, detailInfoList);
 
         } catch (error) {
             console.log(`Error from top sheet info fetch: ${error.message}`);
