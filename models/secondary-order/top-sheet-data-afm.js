@@ -7,8 +7,9 @@ class TopSheetDataAfm {
         this.distributorId = null;
         this.distributor = null;
         this.itemInfos = [];
-        this.discountInfos = [];
-        this.orderAmount = 0;
+        this.totalVolume = 0;
+        this.totalAmount = 0;
+        this.totalUnit = 0;
     }
 
     setUserId(userId) {
@@ -45,8 +46,18 @@ class TopSheetDataAfm {
         return this;
     }
 
-    setOrderAmount(orderAmount) {
-        this.orderAmount = orderAmount;
+    setTotalAmount(amount) {
+        this.totalAmount += amount;
+        return this;
+    }
+
+    setTotalUnit(unit) {
+        this.totalUnit += unit;
+        return this;
+    }
+
+    setTotalVolume(volume) {
+        this.totalVolume += volume;
         return this;
     }
 
@@ -57,20 +68,60 @@ class TopSheetDataAfm {
             this.productId = null;
             this.product = null;
             this.totalUnit = null;
-            this.totalVolume = null;
             this.totalAmount = null;
+            this.totalVolume = null;
             this.measurementUnit = null;
+            this.serial = 0;
         }
 
-        setDistributorId(id) { this.distributorId = id; return this;}
-        setDistributor(distributor) { this.distributor = distributor; return this;}
-        setProductId(id) { this.productId = id; return this; }
-        setProduct(product) { this.product = product; return this; }
-        setTotalUnit(total) { this.totalUnit = total; return this; }
-        setTotalAmount(amount) { this.totalAmount = amount; return this; }
-        setTotalVolume(volume) { this.totalVolume = volume; return this; }
-        setMeasurementUnit(measurementUnit) { this.measurementUnit = measurementUnit; return this; }
-        build() { return this; }
+        setDistributorId(id) {
+            this.distributorId = id;
+            return this;
+        }
+
+        setDistributor(distributor) {
+            this.distributor = distributor;
+            return this;
+        }
+
+        setProductId(id) {
+            this.productId = id;
+            return this;
+        }
+
+        setProduct(product) {
+            this.product = product;
+            return this;
+        }
+
+        setTotalUnit(total) {
+            this.totalUnit = total;
+            return this;
+        }
+
+        setTotalAmount(amount) {
+            this.totalAmount = amount;
+            return this;
+        }
+
+        setTotalVolume(volume) {
+            this.totalVolume = volume;
+            return this;
+        }
+
+        setMeasurementUnit(measurementUnit) {
+            this.measurementUnit = measurementUnit;
+            return this;
+        }
+
+        setSerial(serial) {
+            this.serial = serial;
+            return this;
+        }
+
+        build() {
+            return this;
+        }
     }
 }
 
