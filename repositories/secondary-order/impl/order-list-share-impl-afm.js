@@ -72,9 +72,6 @@ class OrderListShareImplAfm {
             const topSheetItems = Array.from(topSheetQueryResult);
             const detailItems = Array.from(detailQueryResult);
 
-            console.log(topSheetItems);
-            console.log(detailItems);
-
             const productIdSet = new Set();
             const distributorIdSet = new Set();
             const marketIdSet = new Set();
