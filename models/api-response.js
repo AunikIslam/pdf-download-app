@@ -28,3 +28,11 @@ exports.Error = class Error {
         this.timestamp = utilFunctions.datePipe(new Date(), 'yyyy-MM-dd hh:mm:ss');
     }
 };
+
+exports.LocalMessage = class LocalMessage {
+    constructor(content, code = 200, message = null) {
+        this.content = content;
+        this.code = code;
+        this.message = message;
+    }
+}
