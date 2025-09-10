@@ -12,6 +12,7 @@ const sessionContextService = require('../../../services/session-context-service
 const TopSheetDataAfm = require('../../../models/secondary-order/top-sheet-data-afm');
 const OrderDetailDataAfm = require('../../../models/secondary-order/order-detail-data-afm');
 const pdfPreparationImpl = require('../impl/pdf-preparation-impl');
+const apiResponse = require('../../../models/api-response');
 
 
 class OrderListShareImplAfm {
@@ -39,12 +40,15 @@ class OrderListShareImplAfm {
             const orderIdList = orderIdsQueryResult.map(row => Number(row.id));
 
             if (orderIdList.length === 0) {
-                return 0;
+                throw new apiResponse.LocalMessage(null, 400, 'No order available');
             }
             return await this.prepareSecondaryOrderPdfForAfm(orderIdList);
 
         } catch (error) {
-            console.error(`$Error from order ids fetch: ${error.message}`);
+            throw new apiResponse.LocalMessage(
+                null,
+                error.code ? error.code : 500,
+                error.message ? error.message : 'Failed to fetch order ids. Contact Support');
         }
 
     }
@@ -298,7 +302,7 @@ class OrderListShareImplAfm {
             return await pdfPreparationImpl.prepareSecondaryOrderPdfForAfm(topSheetInfoList, detailInfoList);
 
         } catch (error) {
-            console.log(`Error from top sheet info fetch: ${error.message}`);
+            throw new apiResponse.LocalMessage(null, 500, 'Failed to prepare pdf data. Contact support');
         }
     }
 }

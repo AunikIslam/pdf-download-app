@@ -239,13 +239,9 @@ exports.secondaryOrderSummaryForAfm = async (req, res) => {
     if (parsedParams.toDate == null) {
         return res.status(400).json(new ApiResponse.Error(['To Date is required'], 400));
     }
-    const finalPdf = await orderListShareImpl.getDataToShareOrder(parsedParams);
-
-    if (finalPdf === 0) {
-        return res.status(200).json(new ApiResponse.Success(`No order available to print`));
-    }
 
     try {
+        const finalPdf = await orderListShareImpl.getDataToShareOrder(parsedParams);
         res.set({
             "Content-Type": "application/pdf",
             "Content-Disposition": `attachment; filename=${Date.now()}.pdf`,
@@ -253,6 +249,6 @@ exports.secondaryOrderSummaryForAfm = async (req, res) => {
         });
         res.send(finalPdf);
     } catch (error) {
-        res.status(500).json(new ApiResponse.Error([error.message]));
+        res.status(error.code).json(new ApiResponse.Error([error.message], error.code));
     }
 }
