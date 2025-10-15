@@ -45,7 +45,7 @@ class PdfPreparationImpl {
     }
 
     static async prepareSecondaryOrderPdfForAfm(topSheetContent, detailContent) {
-        const {orgLogo, stylesForTopSheet, stylesForDetails} = staticAssetService.getAfmStaticProperties()
+        const {orgLogo, stylesForTopSheet, stylesForDetails} = staticAssetService.getAfmStaticProperties();
 
         try {
             const filePathForTopSheet = path.join(rootDir, 'templates', 'afm-templates', 'secondary-order', 'top-sheet.ejs');
