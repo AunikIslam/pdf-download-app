@@ -40,5 +40,5 @@ const options = {
 const specs = swaggerJsdoc(options);
 
 module.exports = (app) => {
-    app.use('/pdf-manager/swagger-ui/index.html', swaggerUi.serve, swaggerUi.setup(specs));
+    app.use('/pdf-manager/pdf-export/swagger-ui/index.html', swaggerUi.serve, swaggerUi.setup(specs));
 };
